@@ -1,0 +1,29 @@
+# macOS system files
+.DS_Store
+
+# Xcode files
+*.xcuserstate
+*.xcscmblueprint
+
+# Derived Data (build artifacts)
+DerivedData/
+build/
+*.xcworkspace
+
+# CocoaPods
+Pods/
+
+# Carthage
+Carthage/
+
+# Swift Package Manager
+Package.resolved
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+
+# Env files
+*.xcconfig
+*.env
