@@ -1,5 +1,5 @@
 //
-//  BaseViewController.swift
+//  BaseController.swift
 //  CoinRanking
 //
 //  Created by Ashish Karna on 20/02/2025.
@@ -8,7 +8,7 @@
 import UIKit
 
 
-class BaseViewController: UIViewController {
+class BaseController: UIViewController {
     var baseView: BaseView
     var baseViewModel: BaseViewModel
     

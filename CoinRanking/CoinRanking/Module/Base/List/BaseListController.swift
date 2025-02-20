@@ -7,7 +7,7 @@
 
 import Foundation
 
-class BaseListController: BaseViewController {
+class BaseListController: BaseController {
     
     var screenView: BaseListView {
         return baseView as! BaseListView

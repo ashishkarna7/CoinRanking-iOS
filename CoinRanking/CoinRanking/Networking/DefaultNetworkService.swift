@@ -16,7 +16,7 @@ protocol NetworkService {
 
 // MARK: - Network Service
 
-final class DefaultNetworkService: NetworkService {
+final class NetworkManager: NetworkService {
 
     private let session: URLSession
 
@@ -104,7 +104,7 @@ struct CoinListParameters: Encodable {
 
 // Usage Example in ViewModel or other
 
-let networkService = DefaultNetworkService()
+let networkService = NetworkManager()
 
 let cancellable = networkService.request(CoinRankingTarget.getCoinList(CoinListParameters(limit: 10, offset: 0, base: "USD")))
     .sink(receiveCompletion: { completion in

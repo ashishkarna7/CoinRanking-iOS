@@ -29,3 +29,7 @@ enum CoinRankingTarget: TargetType {
     }
 }
 
+//coinrankingd7633692ad19b7a34b748480c63bd9231ada4cbfd9d88687
+//
+//https://api.coinranking.com/v2/coins
+
