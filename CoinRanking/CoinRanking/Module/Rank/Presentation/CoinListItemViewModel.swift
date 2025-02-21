@@ -6,3 +6,11 @@
 //
 
 import Foundation
+
+struct CoinListItemViewModel: ListItemViewModel {
+    var uid: String = ""
+    
+    init(response: CoinResponse) {
+        
+    }
+}

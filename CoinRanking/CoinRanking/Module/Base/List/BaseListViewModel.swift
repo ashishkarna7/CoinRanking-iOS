@@ -20,7 +20,7 @@ class BaseListViewModel: BaseViewModel {
     var isReloadCell = PassthroughSubject<IndexPath, Never>()
     var isRemoveCell = PassthroughSubject<IndexPath, Never>()
     
-    private(set) var currentPage: Int = 1
+    private(set) var currentPageOffset: Int = 0
     private var isLastPage = false
     private var canPerformPagination = true
     var itemsPerPage: Int = 0
@@ -52,11 +52,11 @@ class BaseListViewModel: BaseViewModel {
         shouldExecuteManager = true
         switch type {
         case .initial:
-            currentPage = 1
+            currentPageOffset = 0
             isLastPage = false
             self.viewState.send(.loading)
         case .refresh:
-            currentPage = 1
+            currentPageOffset = 0
             isLastPage = false
             viewState.send(.refreshConrolLoading)
         case .pagination:
@@ -64,7 +64,7 @@ class BaseListViewModel: BaseViewModel {
                 shouldExecuteManager = false
                 return
             }
-            currentPage += 1
+            currentPageOffset += 1
             viewState.send(.paginationLoading)
         }
         self.canPerformPagination = false
@@ -72,42 +72,53 @@ class BaseListViewModel: BaseViewModel {
     
     func getItemList(type: ContentLoadingType) {}
     
-    func handleCompletion<T: ListItemViewModel>(result: Result<[T], ErrorResponse>) {
-            switch result {
-            case .success(let list):
-                self.viewState.send(.idle)
-                guard !list.isEmpty else {
-                    if self.currentPage == 1 {
-                        showNoResultOption.send((true, LocalizedKeys.noResultFound.value))
-                    } else {
-                        showNoResultOption.send((false, nil))
-                    }
-                    self.isLastPage = true
-                    return
+    func handleCompletion<T: ListItemViewModel>(_ publisher: AnyPublisher<[T], ErrorResponse>) {
+        publisher
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .failure(let failure):
+                    self.viewState.send(.error(failure))
+                case .finished:
+                    break
                 }
-                
-                if list.count < itemsPerPage {
-                    self.isLastPage = true
-                }
-                
-                if self.currentPage == 1 {
-                    // For initial load or refresh, replace existing items.
-                    self.dictionaryItems.removeAll()
-                    self.dictionaryItems[self.paginationSection] = list
-                    self.didContentFetched.send(true)
-                } else {
-                    // For pagination, append the new items and generate index paths for reloading.
-                    var items = self.dictionaryItems[self.paginationSection] ?? []
-                    let previousCount = items.count
-                    let currentCount = previousCount + list.count
-                    items.append(contentsOf: list)
-                    self.dictionaryItems[self.paginationSection] = items
-                    let indexPaths = (previousCount..<currentCount).map({IndexPath(row: $0, section: self.paginationSection)})
-                    self.isPaginatedContentLoaded.send(indexPaths)
-                }
-                self.canPerformPagination = true
-            case .failure(let failure):
-                self.viewState.send(.error(failure))
+            }, receiveValue: { list in
+                self.processReceivedList(list)
+            })
+            .store(in: &cancellables)
+    }
+
+    private func processReceivedList<T: ListItemViewModel>(_ list: [T]) {
+        self.viewState.send(.idle)
+        
+        guard !list.isEmpty else {
+            if self.currentPageOffset == 0 {
+                showNoResultOption.send((true, LocalizedKeys.noResultFound.value))
+            } else {
+                showNoResultOption.send((false, nil))
             }
+            self.isLastPage = true
+            return
         }
+        
+        if list.count < itemsPerPage {
+            self.isLastPage = true
+        }
+        
+        if self.currentPageOffset == 0 {
+            self.dictionaryItems.removeAll()
+            self.dictionaryItems[self.paginationSection] = list
+            self.didContentFetched.send(true)
+        } else {
+            var items = self.dictionaryItems[self.paginationSection] ?? []
+            let previousCount = items.count
+            let currentCount = previousCount + list.count
+            items.append(contentsOf: list)
+            self.dictionaryItems[self.paginationSection] = items
+            let indexPaths = (previousCount..<currentCount).map { IndexPath(row: $0, section: self.paginationSection) }
+            self.isPaginatedContentLoaded.send(indexPaths)
+        }
+        
+        self.canPerformPagination = true
+    }
+
 }

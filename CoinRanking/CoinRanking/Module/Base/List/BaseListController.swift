@@ -19,5 +19,13 @@ class BaseListController: BaseController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        viewModel.didContentFetched
+            .receive(on: DispatchQueue.main) // Ensure UI updates happen on the main thread
+            .sink(receiveValue: { _ in
+                self.screenView.tableView.reloadData()
+            })
+            .store(in: &cancellables) // Store the subscription to retain it
+
     }
 }

@@ -15,5 +15,8 @@ class RankListController: BaseListController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        viewModel.getItemList(type: .initial)
     }
+    
 }

@@ -20,12 +20,14 @@ enum CoinRankingTarget: TargetType {
         }
     }
     var parameterEncoding: ParameterEncoding { .queryString }
-    var headers: [String : String]? { nil }
-    var authentication: Authentication { .none }
+    var headers: [String : String]? {
+        return nil
+    }
+    var authentication: Authentication { .bearer(token: "coinrankingd7633692ad19b7a34b748480c63bd9231ada4cbfd9d88687")}
 
     func modifyRequest(_ request: inout URLRequest) {
         // Example: Add a custom header
-        // request.addValue("API-Key", forHTTPHeaderField: "x-api-key")
+         request.addValue("coinrankingd7633692ad19b7a34b748480c63bd9231ada4cbfd9d88687", forHTTPHeaderField: "x-access-token")
     }
 }
 

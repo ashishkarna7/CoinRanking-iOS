@@ -19,7 +19,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
         let window = UIWindow(windowScene: windowScene)
-        let rootViewController = BaseListController(view: BaseListView(), viewModel: BaseListViewModel())
+        let repository = RankRepository()
+        let manager = RankManager(repository: repository)
+        let rootViewController = RankListController(view: BaseListView(), viewModel: RankListViewModel(manager: manager))
         window.rootViewController = UINavigationController(rootViewController: rootViewController)
         self.window = window
         window.makeKeyAndVisible()

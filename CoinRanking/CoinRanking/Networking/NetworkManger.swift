@@ -1,5 +1,5 @@
 //
-//  DefaultNetworkService.swift
+//  NetworkManger.swift
 //  CoinRanking
 //
 //  Created by Ashish Karna on 20/02/2025.
@@ -10,13 +10,13 @@ import Combine
 
 // MARK: - NetworkService Protocol
 
-protocol NetworkService {
+protocol NetworkMangerProtocol {
     func request<T: Decodable>(_ target: TargetType) -> AnyPublisher<T, NetworkError>
 }
 
 // MARK: - Network Service
 
-final class NetworkManager: NetworkService {
+final class NetworkManager: NetworkMangerProtocol {
 
     private let session: URLSession
 

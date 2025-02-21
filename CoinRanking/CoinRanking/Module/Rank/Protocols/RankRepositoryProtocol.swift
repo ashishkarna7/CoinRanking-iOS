@@ -5,4 +5,8 @@
 //  Created by Ashish Karna on 21/02/2025.
 //
 
-import Foundation
+import Combine
+
+protocol RankRepositoryProtocol {
+    func fetchRankList(page: Int) -> AnyPublisher<CoinResponse, NetworkError>
+}

@@ -43,8 +43,5 @@ class BaseListView: BaseView {
         containerStackView.snp.makeConstraints({ make in
             make.edges.equalToSuperview()
         })
-        tableView.snp.makeConstraints({ make in
-            make.height.equalTo(300)
-        })
     }
 }

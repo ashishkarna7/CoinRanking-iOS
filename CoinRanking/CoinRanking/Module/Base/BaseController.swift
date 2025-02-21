@@ -6,11 +6,14 @@
 //
 
 import UIKit
+import Combine
 
 
 class BaseController: UIViewController {
     var baseView: BaseView
     var baseViewModel: BaseViewModel
+    
+    var cancellables: Set<AnyCancellable>
     
     convenience init() {
         fatalError("init() has not been implemented")
@@ -21,6 +24,7 @@ class BaseController: UIViewController {
     }
     
     required init(view: BaseView, viewModel: BaseViewModel) {
+        cancellables = Set<AnyCancellable>()
         baseView = view
         baseViewModel = viewModel
         super.init(nibName: nil, bundle: nil)
