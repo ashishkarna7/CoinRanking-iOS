@@ -5,9 +5,9 @@
 //  Created by Ashish Karna on 20/02/2025.
 //
 
-import Foundation
+import UIKit
 
-class BaseListController: BaseController {
+class BaseListController: BaseController, UITableViewDelegate, UITableViewDataSource {
     
     var screenView: BaseListView {
         return baseView as! BaseListView
@@ -19,13 +19,25 @@ class BaseListController: BaseController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        screenView.tableView.delegate = self
+        screenView.tableView.dataSource = self
+        observeEvents()
+    }
+    
+    private func observeEvents() {
         viewModel.didContentFetched
-            .receive(on: DispatchQueue.main) // Ensure UI updates happen on the main thread
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { _ in
                 self.screenView.tableView.reloadData()
             })
-            .store(in: &cancellables) // Store the subscription to retain it
-
+            .store(in: &cancellables)
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return viewModel.getNumberOfSection()
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return viewModel.getNumberOfRow(at: section)
     }
 }
