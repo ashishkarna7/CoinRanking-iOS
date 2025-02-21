@@ -97,7 +97,6 @@ struct Coin: Decodable, Equatable { // Added Equatable for testing
 struct CoinListParameters: Encodable {
     let limit: Int?
     let offset: Int?
-    let base: String?
 }
 
 
@@ -106,7 +105,7 @@ struct CoinListParameters: Encodable {
 
 let networkService = NetworkManager()
 
-let cancellable = networkService.request(CoinRankingTarget.getCoinList(CoinListParameters(limit: 10, offset: 0, base: "USD")))
+let cancellable = networkService.request(CoinRankingTarget.getCoinList(CoinListParameters(limit: 10, offset: 0)))
     .sink(receiveCompletion: { completion in
         switch completion {
         case .failure(let error):
