@@ -15,13 +15,15 @@ class RankManager: RankManagerProtocol {
         self.repository = repository
     }
     
-    func executeRankList(page: Int) -> AnyPublisher<[CoinListItemViewModel], ErrorResponse> {
+    func executeRankList(page: Int) -> AnyPublisher<[RankListItemViewModel], ErrorResponse> {
         return repository.fetchRankList(page: page)
             .map { response in
-                [CoinListItemViewModel(response: response)]
+                debugPrint(response)
+                return response.data.coins.compactMap({RankListItemViewModel(coin: $0)})
             }
             .mapError { error in
-                ErrorResponse(message: error.localizedDescription)
+                ErrorResponse(type: LocalizedKeys.networkError.value,
+                              message: error.localizedDescription)
             }
             .eraseToAnyPublisher()
     }

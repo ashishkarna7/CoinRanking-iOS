@@ -9,7 +9,7 @@ import Foundation
 import Combine
 
 protocol ListItemViewModel {
-    var uid: String {get set}
+    var uuid: String {get set}
 }
 
 class BaseListViewModel: BaseViewModel {

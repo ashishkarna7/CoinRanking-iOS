@@ -17,7 +17,6 @@ enum ViewState {
     case loadingCompleteWithText // hide loading view with text
     case success(String) // show success toast
     case error(Error) // show error toast
-    case retryVideoUpload // show toast with retry video upload option
     case refreshConrolLoading
     case empty(String?)
     case paginationLoading

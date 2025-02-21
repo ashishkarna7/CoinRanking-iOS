@@ -28,4 +28,5 @@ enum LocalizedKeys: String, Localizable {
     }
     
     case noResultFound = "no_result_found"
+    case networkError = "network_error"
 }

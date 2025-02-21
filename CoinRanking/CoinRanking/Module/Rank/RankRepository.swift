@@ -20,6 +20,6 @@ class RankRepository: RankRepositoryProtocol {
     
     func fetchRankList(page: Int) -> AnyPublisher<CoinResponse, NetworkError> {
         let param = CoinListParameters(limit: 10, offset: page)
-        return self.networkService.request(CoinRankingTarget.getCoinList(param))
+        return self.networkService.request(CoinRankingAPI.getCoinList(param))
     }
 }

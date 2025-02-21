@@ -8,12 +8,6 @@
 import Foundation
 import Combine
 
-// MARK: - NetworkService Protocol
-
-protocol NetworkMangerProtocol {
-    func request<T: Decodable>(_ target: TargetType) -> AnyPublisher<T, NetworkError>
-}
-
 // MARK: - Network Service
 
 final class NetworkManager: NetworkMangerProtocol {
@@ -85,36 +79,3 @@ final class NetworkManager: NetworkMangerProtocol {
             .eraseToAnyPublisher()
     }
 }
-
-// MARK: - Example Usage (More Realistic)
-
-struct Coin: Decodable, Equatable { // Added Equatable for testing
-    let uuid: String
-    let name: String
-    let symbol: String
-}
-
-struct CoinListParameters: Encodable {
-    let limit: Int?
-    let offset: Int?
-}
-
-
-
-// Usage Example in ViewModel or other
-
-let networkService = NetworkManager()
-
-let cancellable = networkService.request(CoinRankingTarget.getCoinList(CoinListParameters(limit: 10, offset: 0)))
-    .sink(receiveCompletion: { completion in
-        switch completion {
-        case .failure(let error):
-            print("Error: \(error.localizedDescription)") // Use localizedDescription
-        case .finished:
-            print("Finished")
-        }
-    }, receiveValue: { (coins: [Coin]) in
-        print("Coins: \(coins)")
-    })
-
-// Store cancellable to keep the subscription alive
