@@ -11,6 +11,10 @@ import UIKit
 
 class CoinListController: BaseListController {
     
+    override var screenView: CoinListView {
+        return baseView as! CoinListView
+    }
+    
     override var viewModel: CoinListViewModel {
         return baseViewModel as! CoinListViewModel
     }
@@ -35,13 +39,8 @@ class CoinListController: BaseListController {
     }
     
     private func setupFilterSegmentControl() {
-        let filterSegmentedControl = UISegmentedControl(items: [FilterType.all.value,
-                                                                FilterType.price.value,
-                                                                FilterType.volume.value])
-        filterSegmentedControl.selectedSegmentIndex = 0
-        filterSegmentedControl.addTarget(self, action: #selector(filterChanged(_:)), for: .valueChanged)
-
-        navigationItem.titleView = filterSegmentedControl
+        screenView.segmentedControl.addTarget(self, action: #selector(filterChanged(_:)), for: .valueChanged)
+        navigationItem.titleView = screenView.segmentedControl
     }
 
     @objc private func filterChanged(_ sender: UISegmentedControl) {
@@ -59,7 +58,7 @@ class CoinListController: BaseListController {
     }
 
     @objc private func showFavorites() {
-        let favoriteVC = CoinListController(view: BaseListView(),
+        let favoriteVC = CoinListController(view: CoinListView(),
                                             viewModel: CoinListViewModel(manager: viewModel.manager,
                                                                          type: .favorite))
         self.navigationController?.pushViewController(favoriteVC, animated: true)
@@ -72,14 +71,16 @@ class CoinListController: BaseListController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withClassIdentifier: CoinItemTableViewCell.self)
-        let item = viewModel.getItem(from: indexPath)
-        cell.config(vm: item)
+        if let item = viewModel.getItem(from: indexPath) {
+            cell.config(vm: item)
+        }
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let item = viewModel.getItem(from: indexPath)
-        self.navigateToDetail(uuid: item.uuid)
+        if let item = viewModel.getItem(from: indexPath) {
+            self.navigateToDetail(uuid: item.uuid)
+        }
     }
     
     // MARK: - Swipe to Favorite

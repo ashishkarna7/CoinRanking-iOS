@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import SwiftUI
+import Charts
 
 class CoinDetailView: BaseView {
  
@@ -15,8 +17,66 @@ class CoinDetailView: BaseView {
         return view
     }()
     
+    private lazy var chartTitleLabel: UILabel = {
+        let label = UILabel()
+        label.font = AppFont.heading
+        label.textColor = AppColor.textPrimaryColor
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private lazy var chartContainerView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    lazy var segmentedControl: UISegmentedControl = {
+        let segmentedControl = UISegmentedControl(items: [ChartPeriodType.day.value,
+                                                          ChartPeriodType.week.value,
+                                                          ChartPeriodType.month.value,
+                                                          ChartPeriodType.year.value])
+        segmentedControl.selectedSegmentIndex = 0
+        segmentedControl.translatesAutoresizingMaskIntoConstraints = false
+        return segmentedControl
+    }()
+    
+    private lazy var chartStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [chartTitleLabel, chartContainerView, segmentedControl])
+        stackView.axis = .vertical
+        stackView.spacing = 8
+        stackView.isLayoutMarginsRelativeArrangement = true
+        stackView.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16)
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+
+    private lazy var statisticTitleLabel: UILabel = {
+        let label = UILabel()
+        label.font = AppFont.heading
+        label.textColor = AppColor.textPrimaryColor
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private lazy var statisticView: CoinStatisticsView = {
+        let view = CoinStatisticsView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private lazy var statisticStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [statisticTitleLabel, statisticView])
+        stackView.axis = .vertical
+        stackView.spacing = 8
+        stackView.isLayoutMarginsRelativeArrangement = true
+        stackView.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16)
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
     private lazy var containerStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [headingView])
+        let stackView = UIStackView(arrangedSubviews: [headingView, chartStackView, statisticStackView])
         stackView.axis = .vertical
         stackView.spacing = 16
         stackView.isLayoutMarginsRelativeArrangement = true
@@ -44,6 +104,8 @@ class CoinDetailView: BaseView {
         self.backgroundColor = AppColor.tableViewBackgroundColor
         addSubview(scrollView)
         generateChildren()
+        chartTitleLabel.text = "Price chart"
+        statisticTitleLabel.text = "Statistics"
     }
     
     private func generateChildren() {
@@ -59,150 +121,38 @@ class CoinDetailView: BaseView {
         containerStackView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
+        
+        chartContainerView.snp.makeConstraints { make in
+            make.height.equalTo(220) // Adjust height as needed
+        }
+    }
+    
+    private func setupChartView(with data: [CoinPricePoint]) {
+        // Remove any previously added chart view
+        chartContainerView.subviews.forEach { $0.removeFromSuperview() }
+        let chartView = UIHostingController(rootView: CoinChartView(data: data))
+        chartView.view.backgroundColor = .clear
+        chartView.view.translatesAutoresizingMaskIntoConstraints = false
+        
+        chartContainerView.addSubview(chartView.view)
+        chartView.view.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
     }
     
     func config(vm: CoinDetailItemViewModel) {
         headingView.config(vm: vm)
-    }
-}
 
-
-class CoinHeadingView: BaseView {
-    
-   private lazy var coinImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
-    }()
-    
-    private  lazy var coinWrapperView: UIView = {
-        let view = UIView()
-        view.addSubview(coinImageView)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-
-    private  lazy var coinPriceLabel: UILabel = {
-        let label = UILabel()
-        label.font = AppFont.subHeading
-        label.textColor = AppColor.textPrimaryColor
-        label.textAlignment = .right
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    private lazy var coinChangeLabel: UILabel = {
-        let label = UILabel()
-        label.font = AppFont.body
-        label.textColor = AppColor.textPrimaryColor
-        label.textAlignment = .right
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    private lazy var priceStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [coinPriceLabel,
-                                                       coinChangeLabel])
-        stackView.axis = .vertical
-        stackView.spacing = 4
-        stackView.isLayoutMarginsRelativeArrangement = true
-        stackView.directionalLayoutMargins = .zero
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        return stackView
-    }()
-    
-    private lazy var priceStackWrapperView: UIView = {
-        let view = UIView()
-        view.addSubview(priceStackView)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-    
-    lazy var favoriteButton: UIButton = {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
-    
-    private lazy var buttonWrapperView: UIView = {
-        let view = UIView()
-        view.addSubview(favoriteButton)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-    
-    private lazy var exchangeStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [coinWrapperView,
-                                                       priceStackWrapperView])
-        stackView.axis = .horizontal
-        stackView.spacing = 8
-        stackView.isLayoutMarginsRelativeArrangement = true
-        stackView.directionalLayoutMargins = .zero
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        return stackView
-    }()
-    
-    private lazy var containerStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [exchangeStackView,
-                                                       buttonWrapperView])
-        stackView.axis = .horizontal
-        stackView.spacing = 8
-        stackView.distribution = .fillEqually
-        stackView.isLayoutMarginsRelativeArrangement = true
-        stackView.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16)
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        return stackView
-    }()
-    
-    private lazy var imageSize: CGSize = {
-        let width: CGFloat = AppScreen.screenWidth * 0.15
-        return CGSize(width: width, height: width)
-    }()
-    
-    override func create() {
-        backgroundColor = AppColor.tableViewSectionBackgroundColor
-        addSubview(containerStackView)
-        generateChildren()
-    }
-    
-    private func generateChildren() {
-        containerStackView.snp.makeConstraints({ make in
-            make.edges.equalToSuperview()
-        })
-        
-        coinImageView.snp.makeConstraints({ make in
-            make.width.height.equalTo(imageSize.width)
-            make.top.left.equalToSuperview()
-            make.right.bottom.lessThanOrEqualToSuperview()
-        })
-        
-        priceStackView.snp.makeConstraints({ make in
-            make.left.right.equalToSuperview()
-            make.centerY.equalToSuperview()
-        })
-        
-        favoriteButton.snp.makeConstraints({ make in
-            make.width.height.equalTo(imageSize.width)
-            make.right.equalToSuperview()
-            make.centerY.equalToSuperview()
-            make.left.greaterThanOrEqualToSuperview()
-        })
-    }
-    
-    func config(vm: CoinDetailItemViewModel) {
-        coinPriceLabel.text = vm.price
-        coinChangeLabel.text = vm.change
-        coinChangeLabel.textColor = vm.isChangePositive ? AppColor.positiveGainColor : AppColor.negativeGainColor
-        if let url = vm.iconUrl {
-            coinImageView.sd_setImage(with: url,
-                                      placeholderImage: nil,
-                                      options: [],
-                                      context: [.imageThumbnailPixelSize: imageSize])
+        if let hexValue = vm.chartBackgroundColor {
+            let color =  UIColor(hex: hexValue)
+            chartContainerView.backgroundColor = color.withAlphaComponent(0.2)
+            statisticView.backgroundColor = color.withAlphaComponent(0.2)
         }
-        let buttonImage = vm.isFavorite ? UIImage(systemName: "heart.fill") : UIImage(systemName: "heart")
-        let tintColor = vm.isFavorite ? AppColor.primaryColor : AppColor.tableViewCellBackgroundColor
-        favoriteButton.tintColor = tintColor
-        favoriteButton.setImage(buttonImage, for: .normal)
+        if !vm.chartData.isEmpty {
+            setupChartView(with: vm.chartData)
+        }
+        
+        statisticView.config(vm: vm)
+        
     }
 }

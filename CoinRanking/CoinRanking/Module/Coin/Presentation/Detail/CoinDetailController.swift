@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 class CoinDetailController: BaseController {
     
@@ -21,8 +22,13 @@ class CoinDetailController: BaseController {
         super.viewDidLoad()
         self.navigationItem.title = viewModel.coinDetail.name
         self.viewModel.fetchCoinDetail()
-        populateView()
+        self.screenView.config(vm: viewModel.coinDetail)
         observeEvents()
+        screenView.segmentedControl.addTarget(self, action: #selector(filterChanged(_:)), for: .valueChanged)
+    }
+    
+    @objc private func filterChanged(_ sender: UISegmentedControl) {
+        viewModel.applyFilter(tag: sender.selectedSegmentIndex)
     }
     
     private func observeEvents() {
@@ -30,11 +36,7 @@ class CoinDetailController: BaseController {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 guard let self = self else {return}
-                self.populateView()
+                self.screenView.config(vm: viewModel.coinDetail)
         }).store(in: &cancellables)
-    }
-    
-    private func populateView() {
-        screenView.config(vm: viewModel.coinDetail)
     }
 }

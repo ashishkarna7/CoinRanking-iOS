@@ -57,15 +57,3 @@ class CoinListItemViewModel: ListItemViewModel {
         self.isFavorite = false
     }
 }
-
-
-class CoinDetailItemViewModel: CoinListItemViewModel {
-    override init(coin: Coin) {
-        super.init(coin: coin)
-    }
-    
-    override init(vm: CoinListItemViewModel) {
-        super.init(vm: vm)
-    }
-
-}

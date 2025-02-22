@@ -11,13 +11,13 @@ class CoinListViewModel: BaseListViewModel {
     
     private(set) var manager: CoinRankManagerProtocol
     
-    private(set) var filterType: FilterType
+    private(set) var filterType: CoinFilterType
     
     private var previousSelectedTag: Int = 0
     private var currrentSelectedTag: Int = 0
-    private var fetchStatus: [FilterType: Bool] = [:]
+    private var fetchStatus: [CoinFilterType: Bool] = [:]
     
-    init(manager: CoinRankManagerProtocol, type: FilterType) {
+    init(manager: CoinRankManagerProtocol, type: CoinFilterType) {
         self.filterType = type
         self.manager = manager
         super.init()
@@ -37,9 +37,9 @@ class CoinListViewModel: BaseListViewModel {
     
     override func getItemList(type: ContentLoadingType) {
         
-        if currentPageOffset > 1 {
-            return
-        }
+//        if currentPageOffset > 1 {
+//            return
+//        }
         if filterType == .favorite {
             self.viewState.send(.idle)
             didContentFetched.send(true)
@@ -68,8 +68,11 @@ class CoinListViewModel: BaseListViewModel {
         return manager.getCoinItems(for: filterType).count
     }
     
-    func getItem(from indexPath: IndexPath) -> CoinListItemViewModel {
-        return manager.getCoinItems(for: filterType)[indexPath.row]
+    func getItem(from indexPath: IndexPath) -> CoinListItemViewModel? {
+        if indexPath.row < manager.getCoinItems(for: filterType).count {
+            return manager.getCoinItems(for: filterType)[indexPath.row]
+        }
+        return nil
     }
     
     override func resetData() {
@@ -78,7 +81,7 @@ class CoinListViewModel: BaseListViewModel {
     }
     
     func toggleFavorite(at indexPath: IndexPath) {
-        let item = getItem(from: indexPath)
+        guard let item = getItem(from: indexPath) else {return}
         if item.isFavorite {
             manager.removeFavorite(uuid: item.uuid)
         } else {
@@ -91,9 +94,9 @@ class CoinListViewModel: BaseListViewModel {
         self.currrentSelectedTag = tag
         if self.currrentSelectedTag != self.previousSelectedTag {
             switch tag {
-            case FilterType.all.rawValue: filterType = .all
-            case FilterType.price.rawValue: filterType = .price
-            case FilterType.volume.rawValue: filterType = .volume
+            case CoinFilterType.all.rawValue: filterType = .all
+            case CoinFilterType.price.rawValue: filterType = .price
+            case CoinFilterType.volume.rawValue: filterType = .volume
             default: filterType = .favorite
             }
             

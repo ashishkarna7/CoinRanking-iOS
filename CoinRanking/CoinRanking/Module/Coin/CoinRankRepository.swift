@@ -18,7 +18,7 @@ class CoinRankRepository: CoinRankRepositoryProtocol {
         self.networkService = NetworkManager()
     }
     
-    func fetchCoinList(page: Int, limit: Int, filterType: FilterType) -> AnyPublisher<CoinResponse, NetworkError> {
+    func fetchCoinList(page: Int, limit: Int, filterType: CoinFilterType) -> AnyPublisher<CoinResponse, NetworkError> {
         var orderBy = ""
         switch filterType {
         case .all:
@@ -34,9 +34,20 @@ class CoinRankRepository: CoinRankRepositoryProtocol {
         return self.networkService.request(CoinRankingAPI.getCoinList(param))
     }
     
-    func fetchCoinDetail(uuid:String) -> AnyPublisher<CoinDetailResponse, NetworkError> { 
-        let param = CoinDetailParameter(uuid: uuid)
-        return self.networkService.request(CoinRankingAPI.getCoinDetail(param))
+    func fetchCoinDetail(uuid:String, period: ChartPeriodType) -> AnyPublisher<CoinDetailResponse, NetworkError> {
+        var timePeriod = ""
+        switch period {
+        case .day:
+            timePeriod = "24h"
+        case .week:
+            timePeriod = "7d"
+        case .month:
+            timePeriod = "30d"
+        case .year:
+            timePeriod = "1y"
+        }
+        let param = CoinDetailParameter(timePeriod: timePeriod)
+        return self.networkService.request(CoinRankingAPI.getCoinDetail(uuid, param))
     }
 }
 
@@ -47,5 +58,5 @@ struct CoinListParameters: Encodable {
 }
 
 struct CoinDetailParameter: Encodable {
-    let uuid: String
+    let timePeriod: String?
 }

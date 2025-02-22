@@ -8,6 +8,6 @@
 import Combine
 
 protocol CoinRankRepositoryProtocol {
-    func fetchCoinList(page: Int, limit: Int, filterType: FilterType) -> AnyPublisher<CoinResponse, NetworkError>
-    func fetchCoinDetail(uuid:String) -> AnyPublisher<CoinDetailResponse, NetworkError>
+    func fetchCoinList(page: Int, limit: Int, filterType: CoinFilterType) -> AnyPublisher<CoinResponse, NetworkError>
+    func fetchCoinDetail(uuid:String, period: ChartPeriodType) -> AnyPublisher<CoinDetailResponse, NetworkError>
 }

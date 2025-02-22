@@ -8,31 +8,15 @@
 import Combine
 import Foundation
 
-enum FilterType: Int {
-    case all = 0
-    case price = 1
-    case volume = 2
-    case favorite = 3
-
-    var value: String {
-        switch self {
-        case .all: return "All"
-        case .price: return "Highest Price"
-        case .volume: return "Best 24h"
-        default: return "Favorite"
-        }
-    }
-}
-
 class CoinRankManager: CoinRankManagerProtocol {
     
     private var repository: CoinRankRepositoryProtocol
     
-    var coinListDataSource: [FilterType: [CoinListItemViewModel]] = [:]
+    var coinListDataSource: [CoinFilterType: [CoinListItemViewModel]] = [:]
     var coinDetailDataSource: [String: CoinDetailItemViewModel] = [:]
     
-    private var fetchStatus: [FilterType: Bool] = [:]
-    private var lastPageStatus: [FilterType: Bool] = [:]
+    private var fetchStatus: [CoinFilterType: Bool] = [:]
+    private var lastPageStatus: [CoinFilterType: Bool] = [:]
     
     private var itemsPerPage: Int = 20
     private var maxLimit: Int = 100
@@ -44,7 +28,7 @@ class CoinRankManager: CoinRankManagerProtocol {
         self.repository = repository
     }
     
-    func executeCoinList(page: Int, filterType: FilterType) -> AnyPublisher<[CoinListItemViewModel], ErrorResponse> {
+    func executeCoinList(page: Int, filterType: CoinFilterType) -> AnyPublisher<[CoinListItemViewModel], ErrorResponse> {
         return repository.fetchCoinList(page: page,
                                         limit: itemsPerPage,
                                         filterType: filterType)
@@ -91,11 +75,11 @@ class CoinRankManager: CoinRankManagerProtocol {
             .eraseToAnyPublisher()
     }
     
-    func executeCoinDetail(uuid: String) -> AnyPublisher<CoinDetailItemViewModel?, ErrorResponse> {
-        return repository.fetchCoinDetail(uuid: uuid)
+    func executeCoinDetail(uuid: String, period: ChartPeriodType) -> AnyPublisher<CoinDetailItemViewModel?, ErrorResponse> {
+        return repository.fetchCoinDetail(uuid: uuid, period: period)
             .map({ [weak self]  response in
                 guard let self = self else { return nil}
-                let itemViewModel = CoinDetailItemViewModel(coin: response.data.coin)
+                let itemViewModel = CoinDetailItemViewModel(coin: response.data.coin, timePeriod: period)
                 self.coinDetailDataSource[uuid] = itemViewModel
                 return self.coinDetailDataSource[uuid]
             }).mapError({ error in
@@ -104,7 +88,7 @@ class CoinRankManager: CoinRankManagerProtocol {
             .eraseToAnyPublisher()
     }
     
-    func getCoinItems(for filterType: FilterType) -> [CoinListItemViewModel] {
+    func getCoinItems(for filterType: CoinFilterType) -> [CoinListItemViewModel] {
         let items =  coinListDataSource[filterType] ?? []
         if items.isEmpty {
             self.isEmptyContent.send(true)
@@ -157,11 +141,11 @@ class CoinRankManager: CoinRankManagerProtocol {
         self.fetchStatus.removeAll()
     }
     
-    func getFetchStatus(filterType: FilterType) -> Bool {
+    func getFetchStatus(filterType: CoinFilterType) -> Bool {
         return fetchStatus[filterType] ?? false
     }
     
-    func getLastPageStatus(filterType: FilterType) -> Bool {
+    func getLastPageStatus(filterType: CoinFilterType) -> Bool {
         return lastPageStatus[filterType] ?? false
     }
     

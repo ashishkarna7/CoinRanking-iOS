@@ -22,6 +22,12 @@ struct Coin: Decodable {
     let price: String
     let change: String
     let iconUrl: String
+    let color: String
+    let sparkline: [String?]
+    let allTimeHigh: AllTimeHigh?
+    let marketCap: String?
+    let priceAt: Int?
+    
 }
 
 struct CoinDetailResponse: Decodable {
@@ -32,3 +38,8 @@ struct CoinDetailData: Decodable {
     let coin: Coin
 }
 
+
+struct AllTimeHigh: Decodable {
+    let price: String
+    
+}

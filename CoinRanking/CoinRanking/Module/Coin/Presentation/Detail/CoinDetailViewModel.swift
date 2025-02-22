@@ -15,6 +15,7 @@ class CoinDetailViewModel: BaseViewModel {
     private(set) var coinDetail: CoinDetailItemViewModel
     
     private(set) var didLoadedContent = PassthroughSubject<Bool, Never>()
+    private(set) var period: ChartPeriodType = .day
     
     init(manager: CoinRankManagerProtocol, detail: CoinDetailItemViewModel) {
         self.manager = manager
@@ -24,7 +25,8 @@ class CoinDetailViewModel: BaseViewModel {
     }
     
     func fetchCoinDetail() {
-        manager.executeCoinDetail(uuid: self.uuid).sink(receiveCompletion: { completion in
+        
+        manager.executeCoinDetail(uuid: self.uuid, period: period).sink(receiveCompletion: { completion in
             switch completion {
             case .failure(let failure):
                 self.viewState.send(.error(failure))
@@ -39,5 +41,16 @@ class CoinDetailViewModel: BaseViewModel {
             }
         })
         .store(in: &cancellables)
+    }
+    
+    func applyFilter(tag: Int) {
+        switch tag {
+        case ChartPeriodType.day.rawValue: period = .day
+        case ChartPeriodType.week.rawValue: period = .week
+        case ChartPeriodType.month.rawValue: period = .month
+        default: period = .year
+        }
+        self.viewState.send(.loading)
+        fetchCoinDetail()
     }
 }

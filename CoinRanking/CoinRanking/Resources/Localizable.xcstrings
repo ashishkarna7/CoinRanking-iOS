@@ -1,6 +1,9 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "Date" : {
+
+    },
     "network_error" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -22,6 +25,9 @@
           }
         }
       }
+    },
+    "Price" : {
+
     }
   },
   "version" : "1.0"
