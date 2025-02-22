@@ -10,7 +10,7 @@ import Combine
 
 class CoinDetailViewModel: BaseViewModel {
     
-    private(set) var  manager: CoinRankManagerProtocol
+    private(set) var manager: CoinRankManagerProtocol
     private(set) var uuid: String
     private(set) var coinDetail: CoinDetailItemViewModel
     

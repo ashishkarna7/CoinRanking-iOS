@@ -37,15 +37,17 @@ class CoinListViewModel: BaseListViewModel {
     
     override func getItemList(type: ContentLoadingType) {
         
-//        if currentPageOffset > 1 {
-//            return
-//        }
+        if currentPageOffset > 1 {
+            return
+        }
         if filterType == .favorite {
+            self.viewState.send(.idle)
             didContentFetched.send(true)
             return
         }
         
         if type == .initial, manager.getFetchStatus(filterType: filterType) {
+            self.viewState.send(.idle)
             didContentFetched.send(true)
             return
         }

@@ -9,8 +9,6 @@
 import Foundation
 import UIKit
 
-
-
 class CoinListController: BaseListController {
     
     override var viewModel: CoinListViewModel {

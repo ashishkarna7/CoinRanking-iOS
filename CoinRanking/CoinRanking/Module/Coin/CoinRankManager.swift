@@ -113,22 +113,44 @@ class CoinRankManager: CoinRankManagerProtocol {
     }
     
     func addFavorite(uuid: String) {
-        let items = coinListDataSource.filter({$0.key != .favorite}).flatMap({$0.value}).filter({$0.uuid == uuid})
-        if !items.isEmpty {
-            items.forEach({$0.addFavorite()})
+        coinListDataSource.forEach { key, items in
+            guard key != .favorite else { return }
+            
+            for item in items where item.uuid == uuid {
+                item.addFavorite()
+            }
         }
-        let filteredItems = coinListDataSource.filter({$0.key != .favorite}).flatMap({$0.value}).filter({$0.isFavorite})
+        
+        // Collect updated favorites while maintaining the original order
+        var seen = Set<String>() // Track UUIDs to remove duplicates
+        let filteredItems = coinListDataSource
+            .filter { $0.key != .favorite }
+            .flatMap { $0.value }
+            .filter { $0.isFavorite && seen.insert($0.uuid).inserted }
+
         coinListDataSource[.favorite] = filteredItems
     }
+
     
     func removeFavorite(uuid: String) {
-        let items = coinListDataSource.filter({$0.key != .favorite}).flatMap({$0.value}).filter({$0.uuid == uuid})
-        if !items.isEmpty {
-            items.forEach({$0.removeFavorite()})
+        coinListDataSource.forEach { key, items in
+            guard key != .favorite else { return }
+            
+            for item in items where item.uuid == uuid {
+                item.removeFavorite()
+            }
         }
-        let filteredItems = coinListDataSource.filter({$0.key != .favorite}).flatMap({$0.value}).filter({$0.isFavorite})
+        
+        // Collect updated favorites while maintaining the original order
+        var seen = Set<String>() // Track UUIDs to remove duplicates
+        let filteredItems = coinListDataSource
+            .filter { $0.key != .favorite }
+            .flatMap { $0.value }
+            .filter { $0.isFavorite && seen.insert($0.uuid).inserted }
+
         coinListDataSource[.favorite] = filteredItems
     }
+
     
     func removeData() {
         self.coinListDataSource.removeAll()

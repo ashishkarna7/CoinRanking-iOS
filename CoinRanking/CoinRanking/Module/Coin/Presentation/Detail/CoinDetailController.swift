@@ -21,6 +21,8 @@ class CoinDetailController: BaseController {
         super.viewDidLoad()
         self.navigationItem.title = viewModel.coinDetail.name
         self.viewModel.fetchCoinDetail()
+        populateView()
+        observeEvents()
     }
     
     private func observeEvents() {
@@ -33,6 +35,6 @@ class CoinDetailController: BaseController {
     }
     
     private func populateView() {
-        
+        screenView.config(vm: viewModel.coinDetail)
     }
 }
