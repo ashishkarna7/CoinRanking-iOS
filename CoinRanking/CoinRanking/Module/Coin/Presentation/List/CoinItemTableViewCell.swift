@@ -10,21 +10,21 @@ import SDWebImage
 
 class CoinItemTableViewCell: BaseTableViewCell {
     
-    lazy var coinImageView: UIImageView = {
+    private lazy var coinImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
     
-    lazy var coinWrapperView: UIView = {
+    private lazy var coinWrapperView: UIView = {
         let view = UIView()
         view.addSubview(coinImageView)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
-    lazy var coinNameLabel: UILabel = {
+    private lazy var coinNameLabel: UILabel = {
         let label = UILabel()
         label.font = AppFont.body
         label.textColor = AppColor.textPrimaryColor
@@ -34,7 +34,7 @@ class CoinItemTableViewCell: BaseTableViewCell {
         return label
     }()
     
-    lazy var coinPriceLabel: UILabel = {
+    private lazy var coinPriceLabel: UILabel = {
         let label = UILabel()
         label.font = AppFont.body
         label.textColor = AppColor.textPrimaryColor
@@ -42,7 +42,7 @@ class CoinItemTableViewCell: BaseTableViewCell {
         return label
     }()
     
-    lazy var coinChangeLabel: UILabel = {
+    private lazy var coinChangeLabel: UILabel = {
         let label = UILabel()
         label.font = AppFont.body
         label.textColor = AppColor.textPrimaryColor
@@ -51,7 +51,7 @@ class CoinItemTableViewCell: BaseTableViewCell {
         return label
     }()
     
-    lazy var exchangeStackView: UIStackView = {
+    private lazy var exchangeStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [coinWrapperView,
                                                        coinNameLabel])
         stackView.axis = .horizontal
@@ -62,7 +62,7 @@ class CoinItemTableViewCell: BaseTableViewCell {
         return stackView
     }()
     
-    lazy var priceStackView: UIStackView = {
+    private lazy var priceStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [coinPriceLabel,
                                                        coinChangeLabel])
         stackView.axis = .horizontal
@@ -73,7 +73,7 @@ class CoinItemTableViewCell: BaseTableViewCell {
         return stackView
     }()
     
-    lazy var containerStackView: UIStackView = {
+    private lazy var containerStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [exchangeStackView,
                                                        priceStackView])
         stackView.distribution = .fillEqually
@@ -88,7 +88,7 @@ class CoinItemTableViewCell: BaseTableViewCell {
         return stackView
     }()
     
-    lazy var containerView: UIView = {
+    private lazy var containerView: UIView = {
         let view = UIView()
         view.addSubview(containerStackView)
         view.translatesAutoresizingMaskIntoConstraints = false

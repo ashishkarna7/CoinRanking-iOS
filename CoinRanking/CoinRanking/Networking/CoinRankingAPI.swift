@@ -11,14 +11,14 @@ import Foundation
 enum CoinRankingAPI: TargetType {
     
     case getCoinList(CoinListParameters)
-    case getCoinDetail(CoinDetailParameter)
+    case getCoinDetail(String, CoinDetailParameter)
 
     var baseURL: String { "https://api.coinranking.com/v2/" }
     
     var path: String {
         switch self {
         case .getCoinList: return "coins"
-        case .getCoinDetail(let params): return "coin/\(params.uuid)"
+        case .getCoinDetail(let uuid, _): return "coin/\(uuid)"
         }
     }
     
@@ -26,10 +26,10 @@ enum CoinRankingAPI: TargetType {
     
     var parameters: Encodable? {
         switch self {
-        case .getCoinList(let params):
-            return params
-        case .getCoinDetail:
-            return nil // Path parameters should not be in query/body
+        case .getCoinList(let param):
+            return param
+        case .getCoinDetail(_, let param):
+            return param // Path parameters should not be in query/body
         }
     }
     
