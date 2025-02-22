@@ -24,33 +24,35 @@ enum FilterType: Int {
     }
 }
 
-class RankManager: RankManagerProtocol {
+class CoinRankManager: CoinRankManagerProtocol {
     
-    private var repository: RankRepositoryProtocol
+    private var repository: CoinRankRepositoryProtocol
     
-    var dataSource: [FilterType: [RankListItemViewModel]] = [:]
+    var coinListDataSource: [FilterType: [CoinListItemViewModel]] = [:]
+    var coinDetailDataSource: [String: CoinDetailItemViewModel] = [:]
+    
     private var fetchStatus: [FilterType: Bool] = [:]
     private var lastPageStatus: [FilterType: Bool] = [:]
     
-    private var itemsPerPage: Int = 2
+    private var itemsPerPage: Int = 1
     private var maxLimit: Int = 10
     
     var isLastPageTriggered = PassthroughSubject<Bool, Never>()
     var isEmptyContent = PassthroughSubject<Bool, Never>()
     
-    init(repository: any RankRepositoryProtocol) {
+    init(repository: any CoinRankRepositoryProtocol) {
         self.repository = repository
     }
     
-    func executeRankList(page: Int, filterType: FilterType) -> AnyPublisher<[RankListItemViewModel], ErrorResponse> {
-        return repository.fetchRankList(page: page,
+    func executeCoinList(page: Int, filterType: FilterType) -> AnyPublisher<[CoinListItemViewModel], ErrorResponse> {
+        return repository.fetchCoinList(page: page,
                                         limit: itemsPerPage,
                                         filterType: filterType)
-            .map { [weak self] response -> [RankListItemViewModel] in
+            .map { [weak self] response -> [CoinListItemViewModel] in
                 guard let self = self else { return [] }
                 fetchStatus[filterType] = true
                 let coins = response.data.coins
-                let itemViewModels = coins.map { RankListItemViewModel(coin: $0) }
+                let itemViewModels = coins.map { CoinListItemViewModel(coin: $0) }
  
                 if coins.count < self.itemsPerPage {
                     self.lastPageStatus[filterType] = true
@@ -58,7 +60,7 @@ class RankManager: RankManagerProtocol {
                 }
                 
                 // Get already fetched items and their UUIDs
-                let previouslyFetchedItems = self.dataSource.flatMap({ $0.value })
+                let previouslyFetchedItems = self.coinListDataSource.flatMap({ $0.value })
                 let existingUUIDs = Set(previouslyFetchedItems.map { $0.uuid })
 
                 // Preserve favorite status for existing items
@@ -70,13 +72,13 @@ class RankManager: RankManagerProtocol {
 
                 // Add only unique items to the data source
                 if page == 0 {
-                    self.dataSource[filterType] = itemViewModels
+                    self.coinListDataSource[filterType] = itemViewModels
                 } else {
                     let newItems = itemViewModels.filter { !existingUUIDs.contains($0.uuid) }
-                    self.dataSource[filterType]?.append(contentsOf: newItems)
+                    self.coinListDataSource[filterType]?.append(contentsOf: newItems)
                 }
                 
-                let totalItems = self.dataSource[filterType] ?? []
+                let totalItems = self.coinListDataSource[filterType] ?? []
                 
                 if totalItems.count >= self.maxLimit {
                     self.lastPageStatus[filterType] = true
@@ -91,8 +93,21 @@ class RankManager: RankManagerProtocol {
             .eraseToAnyPublisher()
     }
     
-    func getCoinItems(for filterType: FilterType) -> [RankListItemViewModel] {
-        let items =  dataSource[filterType] ?? []
+    func executeCoinDetail(uuid: String) -> AnyPublisher<CoinDetailItemViewModel?, ErrorResponse> {
+        return repository.fetchCoinDetail(uuid: uuid)
+            .map({ [weak self]  response in
+                guard let self = self else { return nil}
+                let itemViewModel = CoinDetailItemViewModel(coin: response.data.coin)
+                self.coinDetailDataSource[uuid] = itemViewModel
+                return self.coinDetailDataSource[uuid]
+            }).mapError({ error in
+                ErrorResponse(type: LocalizedKeys.networkError.value, message: error.localizedDescription)
+            })
+            .eraseToAnyPublisher()
+    }
+    
+    func getCoinItems(for filterType: FilterType) -> [CoinListItemViewModel] {
+        let items =  coinListDataSource[filterType] ?? []
         if items.isEmpty {
             self.isEmptyContent.send(true)
         }
@@ -100,25 +115,25 @@ class RankManager: RankManagerProtocol {
     }
     
     func addFavorite(uuid: String) {
-        let items = dataSource.flatMap({$0.value}).filter({$0.uuid == uuid})
+        let items = coinListDataSource.flatMap({$0.value}).filter({$0.uuid == uuid})
         if !items.isEmpty {
             items.forEach({$0.addFavorite()})
         }
-        let filteredItems = dataSource.filter({$0.key != .favorite}).flatMap({$0.value}).filter({$0.isFavorite})
-        dataSource[.favorite] = filteredItems
+        let filteredItems = coinListDataSource.filter({$0.key != .favorite}).flatMap({$0.value}).filter({$0.isFavorite})
+        coinListDataSource[.favorite] = filteredItems
     }
     
     func removeFavorite(uuid: String) {
-        let items = dataSource.flatMap({$0.value}).filter({$0.uuid == uuid})
+        let items = coinListDataSource.flatMap({$0.value}).filter({$0.uuid == uuid})
         if !items.isEmpty {
             items.forEach({$0.removeFavorite()})
         }
-        let filteredItems = dataSource.filter({$0.key != .favorite}).flatMap({$0.value}).filter({$0.isFavorite})
-        dataSource[.favorite] = filteredItems
+        let filteredItems = coinListDataSource.filter({$0.key != .favorite}).flatMap({$0.value}).filter({$0.isFavorite})
+        coinListDataSource[.favorite] = filteredItems
     }
     
     func removeData() {
-        self.dataSource.removeAll()
+        self.coinListDataSource.removeAll()
         self.fetchStatus.removeAll()
     }
     
@@ -128,5 +143,16 @@ class RankManager: RankManagerProtocol {
     
     func getLastPageStatus(filterType: FilterType) -> Bool {
         return lastPageStatus[filterType] ?? false
+    }
+    
+    func getCoinDetail(uuid: String) -> CoinDetailItemViewModel {
+        if let item = coinDetailDataSource[uuid] {
+            return item
+        } else {
+            if let item = coinListDataSource.flatMap({$0.value}).first(where: {$0.uuid == uuid}) {
+                coinDetailDataSource[uuid] = CoinDetailItemViewModel(vm: item)
+            }
+        }
+        return coinDetailDataSource[uuid]!
     }
 }

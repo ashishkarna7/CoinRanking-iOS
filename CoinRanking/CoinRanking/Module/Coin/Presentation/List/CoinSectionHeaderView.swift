@@ -7,7 +7,7 @@
 
 import UIKit
 
-class RankListHeaderView: UITableViewHeaderFooterView {
+class CoinSectionHeaderView: UITableViewHeaderFooterView {
     
     lazy var exchangeLabel: UILabel = {
         let label = UILabel()

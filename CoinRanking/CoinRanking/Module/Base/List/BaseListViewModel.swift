@@ -25,8 +25,6 @@ class BaseListViewModel: BaseViewModel {
     private(set) var shouldExecuteManager: Bool = true
     var paginationSection = 0
     
-    private(set) var dictionaryItems: [Int: [ListItemViewModel]] = [:]
-    
     func getNumberOfSection() -> Int {
         return 0
     }

@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-class RankRepository: RankRepositoryProtocol {
+class CoinRankRepository: CoinRankRepositoryProtocol {
     
     private var cancellables: Set<AnyCancellable>
     private var networkService: NetworkMangerProtocol
@@ -18,7 +18,7 @@ class RankRepository: RankRepositoryProtocol {
         self.networkService = NetworkManager()
     }
     
-    func fetchRankList(page: Int, limit: Int, filterType: FilterType) -> AnyPublisher<CoinResponse, NetworkError> {
+    func fetchCoinList(page: Int, limit: Int, filterType: FilterType) -> AnyPublisher<CoinResponse, NetworkError> {
         var orderBy = ""
         switch filterType {
         case .all:
@@ -33,10 +33,19 @@ class RankRepository: RankRepositoryProtocol {
         let param = CoinListParameters(limit: limit, offset: page, orderBy: orderBy)
         return self.networkService.request(CoinRankingAPI.getCoinList(param))
     }
+    
+    func fetchCoinDetail(uuid:String) -> AnyPublisher<CoinDetailResponse, NetworkError> { 
+        let param = CoinDetailParameter(uuid: uuid)
+        return self.networkService.request(CoinRankingAPI.getCoinDetail(param))
+    }
 }
 
 struct CoinListParameters: Encodable {
     let limit: Int?
     let offset: Int?
     let orderBy: String?
+}
+
+struct CoinDetailParameter: Encodable {
+    let uuid: String
 }

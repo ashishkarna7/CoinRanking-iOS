@@ -9,24 +9,50 @@ import Foundation
 
 
 enum CoinRankingAPI: TargetType {
+    
     case getCoinList(CoinListParameters)
+    case getCoinDetail(CoinDetailParameter)
 
     var baseURL: String { "https://api.coinranking.com/v2/" }
-    var path: String { "coins" }
-    var method: HTTPMethod { .get }
-    var parameters: Encodable? {
+    
+    var path: String {
         switch self {
-        case .getCoinList(let params): return params
+        case .getCoinList: return "coins"
+        case .getCoinDetail(let params): return "coin/\(params.uuid)"
         }
     }
-    var parameterEncoding: ParameterEncoding { .queryString }
+    
+    var method: HTTPMethod { .get }
+    
+    var parameters: Encodable? {
+        switch self {
+        case .getCoinList(let params):
+            return params
+        case .getCoinDetail:
+            return nil // Path parameters should not be in query/body
+        }
+    }
+    
+    var parameterEncoding: ParameterEncoding {
+        switch self {
+        case .getCoinList:
+            return .queryString
+        case .getCoinDetail:
+            return .queryString // No request body, but can still support query params if needed
+        }
+    }
+    
     var headers: [String : String]? {
         return nil
     }
+    
     var authentication: Authentication { .none}
 
     func modifyRequest(_ request: inout URLRequest) {
-         request.addValue("coinrankingd7633692ad19b7a34b748480c63bd9231ada4cbfd9d88687", forHTTPHeaderField: "x-access-token")
+        if let value = BuildConfigManager.shared.value(for: .API_KEY) as? String, !value.isEmpty {
+            request.addValue(value,
+                             forHTTPHeaderField: "x-access-token")
+        }
     }
 }
 

@@ -7,7 +7,7 @@
 
 import Foundation
 
-class RankListItemViewModel: ListItemViewModel {
+class CoinListItemViewModel: ListItemViewModel {
     var uuid: String
     private(set) var name: String
     private(set) var price: String
@@ -35,6 +35,16 @@ class RankListItemViewModel: ListItemViewModel {
         }
     }
     
+    init(vm: CoinListItemViewModel) {
+        self.uuid = vm.uuid
+        self.name = vm.name
+        self.price = vm.price
+        self.change = vm.change
+        self.isFavorite = vm.isFavorite
+        self.isChangePositive = vm.isChangePositive
+        self.iconUrl = vm.iconUrl
+    }
+    
     func setFavorite(value: Bool) {
         self.isFavorite = value
     }
@@ -46,4 +56,16 @@ class RankListItemViewModel: ListItemViewModel {
     func removeFavorite() {
         self.isFavorite = false
     }
+}
+
+
+class CoinDetailItemViewModel: CoinListItemViewModel {
+    override init(coin: Coin) {
+        super.init(coin: coin)
+    }
+    
+    override init(vm: CoinListItemViewModel) {
+        super.init(vm: vm)
+    }
+
 }

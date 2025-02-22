@@ -8,7 +8,7 @@
 import UIKit
 import SDWebImage
 
-class RankListItemTableViewCell: BaseTableViewCell {
+class CoinItemTableViewCell: BaseTableViewCell {
     
     lazy var coinImageView: UIImageView = {
         let imageView = UIImageView()
@@ -127,7 +127,7 @@ class RankListItemTableViewCell: BaseTableViewCell {
         })
     }
     
-    func config(vm: RankListItemViewModel) {
+    func config(vm: CoinListItemViewModel) {
         coinNameLabel.text = vm.name
         coinPriceLabel.text = vm.price
         coinChangeLabel.text = vm.change

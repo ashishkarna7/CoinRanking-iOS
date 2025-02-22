@@ -11,10 +11,10 @@ import UIKit
 
 
 
-class RankListController: BaseListController {
+class CoinListController: BaseListController {
     
-    override var viewModel: RankListViewModel {
-        return baseViewModel as! RankListViewModel
+    override var viewModel: CoinListViewModel {
+        return baseViewModel as! CoinListViewModel
     }
     
     override func viewDidLoad() {
@@ -27,8 +27,8 @@ class RankListController: BaseListController {
             setupFavoriteButton()
         }
         // Register header view
-        screenView.tableView.register(RankListHeaderView.self, forHeaderFooterViewReuseIdentifier: RankListHeaderView.identifier)
-        screenView.tableView.registerClass(RankListItemTableViewCell.self)
+        screenView.tableView.register(CoinSectionHeaderView.self, forHeaderFooterViewReuseIdentifier: CoinSectionHeaderView.identifier)
+        screenView.tableView.registerClass(CoinItemTableViewCell.self)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -61,22 +61,27 @@ class RankListController: BaseListController {
     }
 
     @objc private func showFavorites() {
-        let favoriteVC = RankListController(view: BaseListView(),
-                                            viewModel: RankListViewModel(manager: viewModel.manager,
+        let favoriteVC = CoinListController(view: BaseListView(),
+                                            viewModel: CoinListViewModel(manager: viewModel.manager,
                                                                          type: .favorite))
         self.navigationController?.pushViewController(favoriteVC, animated: true)
     }
 
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: RankListHeaderView.identifier) as? RankListHeaderView else { return nil }
+        guard let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: CoinSectionHeaderView.identifier) as? CoinSectionHeaderView else { return nil }
         return view
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withClassIdentifier: RankListItemTableViewCell.self)
+        let cell = tableView.dequeueReusableCell(withClassIdentifier: CoinItemTableViewCell.self)
         let item = viewModel.getItem(from: indexPath)
         cell.config(vm: item)
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let item = viewModel.getItem(from: indexPath)
+        self.navigateToDetail(uuid: item.uuid)
     }
     
     // MARK: - Swipe to Favorite
@@ -97,5 +102,13 @@ class RankListController: BaseListController {
         favoriteAction.image = UIImage(systemName: "star.fill")
         
         return UISwipeActionsConfiguration(actions: [favoriteAction])
+    }
+    
+    private func navigateToDetail(uuid: String) {
+        
+        let coinDetailVC = CoinDetailController(view: CoinDetailView(),
+                                                viewModel: CoinDetailViewModel(manager: viewModel.manager,
+                                                                               detail: viewModel.getCoinDetail(uuid: uuid)))
+        self.navigationController?.pushViewController(coinDetailVC, animated: true)
     }
 }

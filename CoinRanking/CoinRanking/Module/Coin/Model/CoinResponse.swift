@@ -23,3 +23,12 @@ struct Coin: Decodable {
     let change: String
     let iconUrl: String
 }
+
+struct CoinDetailResponse: Decodable {
+    let data: CoinDetailData
+}
+
+struct CoinDetailData: Decodable {
+    let coin: Coin
+}
+

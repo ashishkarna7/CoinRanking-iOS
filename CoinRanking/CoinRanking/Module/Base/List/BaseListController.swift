@@ -77,4 +77,8 @@ class BaseListController: BaseController, UITableViewDelegate, UITableViewDataSo
             viewModel.getItemList(type: .pagination)
         }
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+    }
 }
