@@ -33,6 +33,15 @@ class BaseListController: BaseController, UITableViewDelegate, UITableViewDataSo
             .store(in: &cancellables)
     }
     
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        return nil
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return UITableView.automaticDimension
+    }
+    
     func numberOfSections(in tableView: UITableView) -> Int {
         return viewModel.getNumberOfSection()
     }
@@ -43,5 +52,12 @@ class BaseListController: BaseController, UITableViewDelegate, UITableViewDataSo
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         return UITableViewCell()
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.section == viewModel.paginationSection,
+           indexPath.row == viewModel.getNumberOfRow(at: indexPath.section) - 4 {
+            viewModel.getItemList(type: .pagination)
+        }
     }
 }

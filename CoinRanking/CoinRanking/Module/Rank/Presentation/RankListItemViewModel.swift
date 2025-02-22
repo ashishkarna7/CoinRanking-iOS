@@ -15,20 +15,28 @@ class RankListItemViewModel: ListItemViewModel {
     private(set) var change: String
     private(set) var iconUrl: URL?
     private var isFavorite: Bool
-    private(set) var backgroundColor: UIColor
+    
+    private(set) var priceChangeTextColor: UIColor
     
     init(coin: Coin) {
         uuid = coin.uuid
         name = coin.name
-        price = "$\(coin.price)"
+        if let value = Double(coin.price) {
+            price = "$" + String(format: "%.2f", value)
+        } else {
+            price = ""
+        }
         change = "\(coin.change)%"
         iconUrl = URL(string: coin.iconUrl) 
         isFavorite = false
-        backgroundColor = .white
+        if let change = Double(coin.change), change < 0 {
+            priceChangeTextColor = AppColor.negativeGainColor
+        } else {
+            priceChangeTextColor = AppColor.positiveGainColor
+        }
     }
     
     func toggleFavorite() {
         self.isFavorite = !self.isFavorite
-        self.backgroundColor = isFavorite ? .systemPink : .white
     }
 }

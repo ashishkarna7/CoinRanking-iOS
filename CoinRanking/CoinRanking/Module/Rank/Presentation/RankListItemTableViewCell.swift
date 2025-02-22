@@ -27,7 +27,9 @@ class RankListItemTableViewCell: BaseTableViewCell {
     lazy var coinNameLabel: UILabel = {
         let label = UILabel()
         label.font = AppFont.body
-        label.textColor = AppColor.primaryColor
+        label.textColor = AppColor.textPrimaryColor
+        label.lineBreakMode = .byTruncatingTail
+        label.numberOfLines = 2
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -35,7 +37,7 @@ class RankListItemTableViewCell: BaseTableViewCell {
     lazy var coinPriceLabel: UILabel = {
         let label = UILabel()
         label.font = AppFont.body
-        label.textColor = AppColor.primaryColor
+        label.textColor = AppColor.textPrimaryColor
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -43,18 +45,40 @@ class RankListItemTableViewCell: BaseTableViewCell {
     lazy var coinChangeLabel: UILabel = {
         let label = UILabel()
         label.font = AppFont.body
-        label.textColor = AppColor.primaryColor
+        label.textColor = AppColor.textPrimaryColor
+        label.textAlignment = .right
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    lazy var containerStackView: UIStackView = {
+    lazy var exchangeStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [coinWrapperView,
-                                                       coinNameLabel,
-                                                       coinPriceLabel,
-                                                       coinChangeLabel])
-        stackView.distribution = .equalSpacing
+                                                       coinNameLabel])
         stackView.axis = .horizontal
+        stackView.spacing = 8
+        stackView.isLayoutMarginsRelativeArrangement = true
+        stackView.directionalLayoutMargins = .zero
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
+    lazy var priceStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [coinPriceLabel,
+                                                       coinChangeLabel])
+        stackView.axis = .horizontal
+        stackView.spacing = 8
+        stackView.isLayoutMarginsRelativeArrangement = true
+        stackView.directionalLayoutMargins = .zero
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
+    lazy var containerStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [exchangeStackView,
+                                                       priceStackView])
+        stackView.distribution = .fillEqually
+        stackView.axis = .horizontal
+        stackView.spacing = 8
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 16,
                                                                      leading: 16,
@@ -71,8 +95,14 @@ class RankListItemTableViewCell: BaseTableViewCell {
         return view
     }()
     
+    private lazy var imageSize: CGSize = {
+        let width: CGFloat = AppScreen.screenWidth * 0.1
+        return CGSize(width: width, height: width)
+    }()
+    
     override func create() {
-        containerView.backgroundColor = .red
+        contentView.backgroundColor = AppColor.tableViewBackgroundColor
+        containerView.backgroundColor = AppColor.tableViewCellBackgroundColor
         contentView.addSubview(containerView)
         generateChildren()
     }
@@ -80,10 +110,10 @@ class RankListItemTableViewCell: BaseTableViewCell {
     private func generateChildren() {
       
         containerView.snp.makeConstraints({ make in
-            make.top.equalToSuperview().offset(8)
-            make.bottom.equalToSuperview().offset(-8)
-            make.left.equalToSuperview().offset(16)
-            make.right.equalToSuperview().offset(-16)
+            make.top.equalToSuperview().offset(4)
+            make.bottom.equalToSuperview().offset(-4)
+            make.left.equalToSuperview().offset(8)
+            make.right.equalToSuperview().offset(-8)
         })
         
         containerStackView.snp.makeConstraints({ make in
@@ -91,7 +121,7 @@ class RankListItemTableViewCell: BaseTableViewCell {
         })
         
         coinImageView.snp.makeConstraints({ make in
-            make.width.height.equalTo(40)
+            make.width.height.equalTo(imageSize.width)
             make.top.left.right.equalToSuperview()
             make.bottom.lessThanOrEqualToSuperview()
         })
@@ -101,8 +131,12 @@ class RankListItemTableViewCell: BaseTableViewCell {
         coinNameLabel.text = vm.name
         coinPriceLabel.text = vm.price
         coinChangeLabel.text = vm.change
+        coinChangeLabel.textColor = vm.priceChangeTextColor
         if let url = vm.iconUrl {
-            coinImageView.sd_setImage(with: url)
+            coinImageView.sd_setImage(with: url,
+                                      placeholderImage: nil,
+                                      options: [],
+                                      context: [.imageThumbnailPixelSize: imageSize])
         }
     }
 }

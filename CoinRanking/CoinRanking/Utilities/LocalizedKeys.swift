@@ -18,7 +18,7 @@ enum LocalizedKeys: String, Localizable {
     }
     
     var value: String {
-        var tableName = "Localizable"
+        let tableName = "Localizable"
         let finalString = NSLocalizedString(self.rawValue,
                                             tableName: tableName,
                                             bundle: Bundle.main,
