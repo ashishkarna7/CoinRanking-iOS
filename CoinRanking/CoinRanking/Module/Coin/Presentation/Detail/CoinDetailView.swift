@@ -10,6 +10,7 @@ import UIKit
 class CoinDetailView: BaseView {
     
     override func create() {
+        self.backgroundColor = AppColor.tableViewBackgroundColor
     }
     
     private func generateChildren() {
