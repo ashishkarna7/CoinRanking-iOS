@@ -36,10 +36,11 @@ class BaseListController: BaseController, UITableViewDelegate, UITableViewDataSo
             })
             .store(in: &cancellables)
         
-        viewModel.isPaginatedContentLoaded
+        viewModel.showNoResultOption
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { indexPaths in
-                self.loadPaginatedData(indexPaths: indexPaths)
+            .sink(receiveValue: { [weak self] _ in
+                guard let self = self else { return }
+                self.screenView.showEmptyLabel(msg: LocalizedKeys.noResultFound.value)
             })
             .store(in: &cancellables)
         

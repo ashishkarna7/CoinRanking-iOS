@@ -9,6 +9,8 @@
 import Foundation
 import UIKit
 
+
+
 class RankListController: BaseListController {
     
     override var viewModel: RankListViewModel {
@@ -17,23 +19,53 @@ class RankListController: BaseListController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.title = "Exchange Listing"
-        setupFilterSegmentControl()
+        if viewModel.filterType == .favorite {
+            self.navigationItem.title = "Favorites"
+        } else {
+            self.navigationItem.title = "Exchange Listing"
+            setupFilterSegmentControl()
+            setupFavoriteButton()
+        }
         // Register header view
         screenView.tableView.register(RankListHeaderView.self, forHeaderFooterViewReuseIdentifier: RankListHeaderView.identifier)
         screenView.tableView.registerClass(RankListItemTableViewCell.self)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         viewModel.getItemList(type: .initial)
     }
     
     private func setupFilterSegmentControl() {
-        let filterSegmentedControl = UISegmentedControl(items: ["All", "Highest Price", "Best 24h"])
+        let filterSegmentedControl = UISegmentedControl(items: [FilterType.all.value,
+                                                                FilterType.price.value,
+                                                                FilterType.volume.value])
         filterSegmentedControl.selectedSegmentIndex = 0
         filterSegmentedControl.addTarget(self, action: #selector(filterChanged(_:)), for: .valueChanged)
 
         navigationItem.titleView = filterSegmentedControl
     }
 
-    @objc private func filterChanged(_ sender: UISegmentedControl) {}
+    @objc private func filterChanged(_ sender: UISegmentedControl) {
+        viewModel.applyFilter(tag: sender.selectedSegmentIndex)
+    }
+    
+    private func setupFavoriteButton() {
+        let favoriteButton = UIBarButtonItem(
+            image: UIImage(systemName: "star.fill"),
+            style: .plain,
+            target: self,
+            action: #selector(showFavorites)
+        )
+        navigationItem.rightBarButtonItem = favoriteButton
+    }
+
+    @objc private func showFavorites() {
+        let favoriteVC = RankListController(view: BaseListView(),
+                                            viewModel: RankListViewModel(manager: viewModel.manager,
+                                                                         type: .favorite))
+        self.navigationController?.pushViewController(favoriteVC, animated: true)
+    }
 
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: RankListHeaderView.identifier) as? RankListHeaderView else { return nil }
@@ -41,8 +73,8 @@ class RankListController: BaseListController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let item = viewModel.getItem(from: indexPath) as? RankListItemViewModel else {return UITableViewCell()}
         let cell = tableView.dequeueReusableCell(withClassIdentifier: RankListItemTableViewCell.self)
+        let item = viewModel.getItem(from: indexPath)
         cell.config(vm: item)
         return cell
     }
@@ -52,12 +84,11 @@ class RankListController: BaseListController {
         
         let favoriteAction = UIContextualAction(style: .normal, title: "Favorite") { [weak self] _, _, completion in
             guard let self = self else { return }
-            guard let item = viewModel.getItem(from: indexPath) as? RankListItemViewModel else {return}
             // Toggle favorite status
-            item.toggleFavorite()
+            viewModel.toggleFavorite(at: indexPath)
             
             // Reload row with animation
-            tableView.reloadRows(at: [indexPath], with: .automatic)
+            tableView.reloadData()
             
             completion(true)
         }

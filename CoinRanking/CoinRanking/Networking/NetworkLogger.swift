@@ -31,8 +31,26 @@ struct NetworkLogger {
         
         os_log("⬅️ Response (%d): %{PUBLIC}@", log: log, type: .debug, httpResponse.statusCode, url.absoluteString)
 
-        if let data = data, let jsonString = String(data: data, encoding: .utf8) {
-            os_log("📥 Response Data: %{PUBLIC}@", log: log, type: .debug, jsonString)
+        if let data = data {
+            let formattedJSON = formatJSON(data)
+            os_log("📥 Response Data: %{PUBLIC}@", log: log, type: .debug, formattedJSON)
         }
     }
+    
+    /// Formats JSON data to a readable string
+       private static func formatJSON(_ data: Data) -> String {
+           do {
+               let jsonObject = try JSONSerialization.jsonObject(with: data, options: [])
+               let prettyData = try JSONSerialization.data(withJSONObject: jsonObject, options: .prettyPrinted)
+               return String(decoding: prettyData, as: UTF8.self)
+           } catch {
+               return "❌ JSON Parsing Error: \(error.localizedDescription)"
+           }
+       }
+    
+    /// Overloaded method to format JSON from a string
+     private static func formatJSON(_ jsonString: String) -> String {
+         guard let data = jsonString.data(using: .utf8) else { return jsonString }
+         return formatJSON(data)
+     }
 }

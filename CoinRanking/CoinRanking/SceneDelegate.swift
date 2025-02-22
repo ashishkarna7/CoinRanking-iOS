@@ -21,7 +21,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let window = UIWindow(windowScene: windowScene)
         let repository = RankRepository()
         let manager = RankManager(repository: repository)
-        let rootViewController = RankListController(view: BaseListView(), viewModel: RankListViewModel(manager: manager))
+        let rootViewController = RankListController(view: BaseListView(), viewModel: RankListViewModel(manager: manager, type: .all))
         window.rootViewController = UINavigationController(rootViewController: rootViewController)
         self.window = window
         window.makeKeyAndVisible()

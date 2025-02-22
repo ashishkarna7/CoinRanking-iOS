@@ -35,7 +35,15 @@ class RankListItemViewModel: ListItemViewModel {
         }
     }
     
-    func toggleFavorite() {
-        self.isFavorite = !self.isFavorite
+    func setFavorite(value: Bool) {
+        self.isFavorite = value
+    }
+    
+    func addFavorite() {
+        self.isFavorite = true
+    }
+    
+    func removeFavorite() {
+        self.isFavorite = false
     }
 }
