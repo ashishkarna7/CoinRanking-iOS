@@ -18,7 +18,7 @@ enum LocalizedKeys: String, Localizable {
     }
     
     var value: String {
-        var tableName = "Localizable"
+        let tableName = "Localizable"
         let finalString = NSLocalizedString(self.rawValue,
                                             tableName: tableName,
                                             bundle: Bundle.main,
@@ -28,4 +28,5 @@ enum LocalizedKeys: String, Localizable {
     }
     
     case noResultFound = "no_result_found"
+    case networkError = "network_error"
 }

@@ -8,12 +8,6 @@
 import Foundation
 import Combine
 
-// MARK: - NetworkService Protocol
-
-protocol NetworkMangerProtocol {
-    func request<T: Decodable>(_ target: TargetType) -> AnyPublisher<T, NetworkError>
-}
-
 // MARK: - Network Service
 
 final class NetworkManager: NetworkMangerProtocol {
@@ -55,66 +49,40 @@ final class NetworkManager: NetworkMangerProtocol {
         target.modifyRequest(&request) // Allow customization before auth
         request = target.authentication.apply(to: request)
 
+        #if DEBUG
+           NetworkLogger.logRequest(request)
+        #endif
         return session.dataTaskPublisher(for: request)
-            .tryMap { data, response in
-                guard let httpResponse = response as? HTTPURLResponse else {
-                    throw NetworkError.unknown
-                }
-
-                if 200..<300 ~= httpResponse.statusCode {
-                    return data
-                } else {
-                    throw NetworkError.requestFailed(statusCode: httpResponse.statusCode, data: data)
-                }
-            }
-            .decode(type: T.self, decoder: JSONDecoder())
-            .mapError { error in
-                if let networkError = error as? NetworkError {
-                    return networkError
-                } else if error is DecodingError {
-                    return NetworkError.decodingError(error)
-                } else if let urlError = error as? URLError {
-                    if urlError.code == .notConnectedToInternet {
-                        return NetworkError.noInternetConnection // More specific error
+                .handleEvents(receiveOutput: { data, response in
+                    #if DEBUG
+                    NetworkLogger.logResponse(response, data: data)
+                    #endif
+                })
+                .tryMap { data, response in
+                    guard let httpResponse = response as? HTTPURLResponse else {
+                        throw NetworkError.unknown
                     }
-                    return NetworkError.requestFailed(statusCode: urlError.code.rawValue, data: nil) // Include URL error code
-                } else {
-                    return NetworkError.unknown
+                    if 200..<300 ~= httpResponse.statusCode {
+                        return data
+                    } else {
+                        throw NetworkError.requestFailed(statusCode: httpResponse.statusCode, data: data)
+                    }
                 }
-            }
-            .eraseToAnyPublisher()
+                .decode(type: T.self, decoder: JSONDecoder())
+                .mapError { error in
+                    if let networkError = error as? NetworkError {
+                        return networkError
+                    } else if error is DecodingError {
+                        return NetworkError.decodingError(error)
+                    } else if let urlError = error as? URLError {
+                        if urlError.code == .notConnectedToInternet {
+                            return NetworkError.noInternetConnection
+                        }
+                        return NetworkError.requestFailed(statusCode: urlError.code.rawValue, data: nil)
+                    } else {
+                        return NetworkError.unknown
+                    }
+                }
+                .eraseToAnyPublisher()
     }
 }
-
-// MARK: - Example Usage (More Realistic)
-
-struct Coin: Decodable, Equatable { // Added Equatable for testing
-    let uuid: String
-    let name: String
-    let symbol: String
-}
-
-struct CoinListParameters: Encodable {
-    let limit: Int?
-    let offset: Int?
-}
-
-
-
-// Usage Example in ViewModel or other
-
-let networkService = NetworkManager()
-
-let cancellable = networkService.request(CoinRankingTarget.getCoinList(CoinListParameters(limit: 10, offset: 0)))
-    .sink(receiveCompletion: { completion in
-        switch completion {
-        case .failure(let error):
-            print("Error: \(error.localizedDescription)") // Use localizedDescription
-        case .finished:
-            print("Finished")
-        }
-    }, receiveValue: { (coins: [Coin]) in
-        print("Coins: \(coins)")
-    })
-
-// Store cancellable to keep the subscription alive

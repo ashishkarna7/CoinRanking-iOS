@@ -12,7 +12,7 @@ class BaseListView: BaseView {
     lazy var tableView: UITableView = {
          let tableView = UITableView()
          tableView.rowHeight = UITableView.automaticDimension
-         tableView.estimatedRowHeight = 200.0
+         tableView.estimatedRowHeight = 60
          tableView.separatorStyle = .none
          tableView.backgroundColor = AppColor.tableViewBackgroundColor
          tableView.sectionFooterHeight = 0
@@ -36,7 +36,6 @@ class BaseListView: BaseView {
         tableView.addSubview(refreshControl)
         tableView.tableFooterView = paginationSpinner
         generateChildren()
-        tableView.backgroundColor = .red
     }
     
     private func generateChildren() {

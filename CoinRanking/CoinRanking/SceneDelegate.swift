@@ -19,9 +19,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
         let window = UIWindow(windowScene: windowScene)
-        let repository = RankRepository()
-        let manager = RankManager(repository: repository)
-        let rootViewController = RankListController(view: BaseListView(), viewModel: RankListViewModel(manager: manager))
+        let repository = CoinRankRepository()
+        let manager = CoinRankManager(repository: repository)
+        let rootViewController = CoinListController(view: BaseListView(), viewModel: CoinListViewModel(manager: manager, type: .all))
         window.rootViewController = UINavigationController(rootViewController: rootViewController)
         self.window = window
         window.makeKeyAndVisible()
