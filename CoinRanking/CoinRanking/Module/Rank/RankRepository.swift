@@ -18,8 +18,13 @@ class RankRepository: RankRepositoryProtocol {
         self.networkService = NetworkManager()
     }
     
-    func fetchRankList(page: Int) -> AnyPublisher<CoinResponse, NetworkError> {
-        let param = CoinListParameters(limit: 20, offset: page)
+    func fetchRankList(page: Int, limit: Int) -> AnyPublisher<CoinResponse, NetworkError> {
+        let param = CoinListParameters(limit: limit, offset: page)
         return self.networkService.request(CoinRankingAPI.getCoinList(param))
     }
+}
+
+struct CoinListParameters: Encodable {
+    let limit: Int?
+    let offset: Int?
 }

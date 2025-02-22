@@ -24,6 +24,10 @@ class BaseListController: BaseController, UITableViewDelegate, UITableViewDataSo
         observeEvents()
     }
     
+    @objc private func refreshData() {
+        viewModel.getItemList(type: .refresh)
+    }
+    
     private func observeEvents() {
         viewModel.didContentFetched
             .receive(on: DispatchQueue.main)
@@ -31,8 +35,20 @@ class BaseListController: BaseController, UITableViewDelegate, UITableViewDataSo
                 self.screenView.tableView.reloadData()
             })
             .store(in: &cancellables)
+        
+        viewModel.isPaginatedContentLoaded
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { indexPaths in
+                self.loadPaginatedData(indexPaths: indexPaths)
+            })
+            .store(in: &cancellables)
+        
+        screenView.refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
     }
     
+    func loadPaginatedData(indexPaths: [IndexPath]) {
+        self.screenView.tableView.insertRows(at: indexPaths, with: .none)
+    }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         return nil

@@ -24,6 +24,7 @@ class BaseListViewModel: BaseViewModel {
     private var isLastPage = false
     private var canPerformPagination = true
     var itemsPerPage: Int = 0
+    var maxLimit: Int?
     private(set) var shouldExecuteManager: Bool = true
     var paginationSection = 0
     
@@ -100,9 +101,6 @@ class BaseListViewModel: BaseViewModel {
             return
         }
         
-        if list.count < itemsPerPage {
-            self.isLastPage = true
-        }
         
         if self.currentPageOffset == 0 {
             self.dictionaryItems.removeAll()
@@ -113,6 +111,9 @@ class BaseListViewModel: BaseViewModel {
             let previousCount = items.count
             let currentCount = previousCount + list.count
             items.append(contentsOf: list)
+            if let maximumLimit = maxLimit, items.count >= maximumLimit {
+                self.isLastPage = true
+            }
             self.dictionaryItems[self.paginationSection] = items
             let indexPaths = (previousCount..<currentCount).map { IndexPath(row: $0, section: self.paginationSection) }
             self.isPaginatedContentLoaded.send(indexPaths)

@@ -13,11 +13,17 @@ class RankListViewModel: BaseListViewModel {
     
     init(manager: RankManagerProtocol) {
         self.manager = manager
+        super.init()
+        self.itemsPerPage = 20
+        self.maxLimit = 100
     }
     
     override func getItemList(type: ContentLoadingType) {
         showLoading(type: type)
         guard shouldExecuteManager else {return}
-        handleCompletion(manager.executeRankList(page: self.currentPageOffset))
+        if type == .pagination {
+            print("pagination")
+        }
+        handleCompletion(manager.executeRankList(page: self.currentPageOffset, limit: self.itemsPerPage))
     }
 }

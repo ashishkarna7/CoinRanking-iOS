@@ -30,7 +30,3 @@ enum CoinRankingAPI: TargetType {
     }
 }
 
-struct CoinListParameters: Encodable {
-    let limit: Int?
-    let offset: Int?
-}

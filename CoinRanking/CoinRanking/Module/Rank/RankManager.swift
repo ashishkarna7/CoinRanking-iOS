@@ -15,10 +15,9 @@ class RankManager: RankManagerProtocol {
         self.repository = repository
     }
     
-    func executeRankList(page: Int) -> AnyPublisher<[RankListItemViewModel], ErrorResponse> {
-        return repository.fetchRankList(page: page)
+    func executeRankList(page: Int, limit: Int) -> AnyPublisher<[RankListItemViewModel], ErrorResponse> {
+        return repository.fetchRankList(page: page, limit: limit)
             .map { response in
-                debugPrint(response)
                 return response.data.coins.compactMap({RankListItemViewModel(coin: $0)})
             }
             .mapError { error in

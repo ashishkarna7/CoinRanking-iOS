@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import UIKit
 
 class RankListItemViewModel: ListItemViewModel {
     var uuid: String
@@ -14,9 +13,9 @@ class RankListItemViewModel: ListItemViewModel {
     private(set) var price: String
     private(set) var change: String
     private(set) var iconUrl: URL?
-    private var isFavorite: Bool
+    private(set) var isFavorite: Bool
     
-    private(set) var priceChangeTextColor: UIColor
+    private(set) var isChangePositive: Bool
     
     init(coin: Coin) {
         uuid = coin.uuid
@@ -30,9 +29,9 @@ class RankListItemViewModel: ListItemViewModel {
         iconUrl = URL(string: coin.iconUrl) 
         isFavorite = false
         if let change = Double(coin.change), change < 0 {
-            priceChangeTextColor = AppColor.negativeGainColor
+            isChangePositive = false
         } else {
-            priceChangeTextColor = AppColor.positiveGainColor
+            isChangePositive = true
         }
     }
     

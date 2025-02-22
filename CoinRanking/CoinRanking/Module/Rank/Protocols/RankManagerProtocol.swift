@@ -8,5 +8,5 @@
 import Combine
 
 protocol RankManagerProtocol {
-    func executeRankList(page: Int) -> AnyPublisher<[RankListItemViewModel], ErrorResponse>
+    func executeRankList(page: Int, limit: Int) -> AnyPublisher<[RankListItemViewModel], ErrorResponse>
 }

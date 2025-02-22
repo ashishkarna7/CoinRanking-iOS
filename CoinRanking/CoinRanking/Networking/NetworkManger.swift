@@ -49,33 +49,40 @@ final class NetworkManager: NetworkMangerProtocol {
         target.modifyRequest(&request) // Allow customization before auth
         request = target.authentication.apply(to: request)
 
+        #if DEBUG
+           NetworkLogger.logRequest(request)
+        #endif
         return session.dataTaskPublisher(for: request)
-            .tryMap { data, response in
-                guard let httpResponse = response as? HTTPURLResponse else {
-                    throw NetworkError.unknown
-                }
-
-                if 200..<300 ~= httpResponse.statusCode {
-                    return data
-                } else {
-                    throw NetworkError.requestFailed(statusCode: httpResponse.statusCode, data: data)
-                }
-            }
-            .decode(type: T.self, decoder: JSONDecoder())
-            .mapError { error in
-                if let networkError = error as? NetworkError {
-                    return networkError
-                } else if error is DecodingError {
-                    return NetworkError.decodingError(error)
-                } else if let urlError = error as? URLError {
-                    if urlError.code == .notConnectedToInternet {
-                        return NetworkError.noInternetConnection // More specific error
+                .handleEvents(receiveOutput: { data, response in
+                    #if DEBUG
+                    NetworkLogger.logResponse(response, data: data)
+                    #endif
+                })
+                .tryMap { data, response in
+                    guard let httpResponse = response as? HTTPURLResponse else {
+                        throw NetworkError.unknown
                     }
-                    return NetworkError.requestFailed(statusCode: urlError.code.rawValue, data: nil) // Include URL error code
-                } else {
-                    return NetworkError.unknown
+                    if 200..<300 ~= httpResponse.statusCode {
+                        return data
+                    } else {
+                        throw NetworkError.requestFailed(statusCode: httpResponse.statusCode, data: data)
+                    }
                 }
-            }
-            .eraseToAnyPublisher()
+                .decode(type: T.self, decoder: JSONDecoder())
+                .mapError { error in
+                    if let networkError = error as? NetworkError {
+                        return networkError
+                    } else if error is DecodingError {
+                        return NetworkError.decodingError(error)
+                    } else if let urlError = error as? URLError {
+                        if urlError.code == .notConnectedToInternet {
+                            return NetworkError.noInternetConnection
+                        }
+                        return NetworkError.requestFailed(statusCode: urlError.code.rawValue, data: nil)
+                    } else {
+                        return NetworkError.unknown
+                    }
+                }
+                .eraseToAnyPublisher()
     }
 }

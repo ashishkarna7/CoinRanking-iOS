@@ -16,7 +16,7 @@ enum ViewState {
     case loadingWithText(String) // show loading with text
     case loadingCompleteWithText // hide loading view with text
     case success(String) // show success toast
-    case error(Error) // show error toast
+    case error(ErrorResponse) // show error toast
     case refreshConrolLoading
     case empty(String?)
     case paginationLoading

@@ -10,6 +10,7 @@
 		1806E70D2D677A22006B3CA6 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 1806E70C2D677A22006B3CA6 /* SnapKit */; };
 		185FE2512D68F9F600EE3DF1 /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = 185FE2502D68F9F600EE3DF1 /* SDWebImage */; };
 		185FE2662D69933000EE3DF1 /* SDWebImageSVGCoder in Frameworks */ = {isa = PBXBuildFile; productRef = 185FE2652D69933000EE3DF1 /* SDWebImageSVGCoder */; };
+		185FE26D2D69AC8F00EE3DF1 /* SwiftMessages in Frameworks */ = {isa = PBXBuildFile; productRef = 185FE26C2D69AC8F00EE3DF1 /* SwiftMessages */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -73,6 +74,7 @@
 			files = (
 				185FE2662D69933000EE3DF1 /* SDWebImageSVGCoder in Frameworks */,
 				185FE2512D68F9F600EE3DF1 /* SDWebImage in Frameworks */,
+				185FE26D2D69AC8F00EE3DF1 /* SwiftMessages in Frameworks */,
 				1806E70D2D677A22006B3CA6 /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -137,6 +139,7 @@
 				1806E70C2D677A22006B3CA6 /* SnapKit */,
 				185FE2502D68F9F600EE3DF1 /* SDWebImage */,
 				185FE2652D69933000EE3DF1 /* SDWebImageSVGCoder */,
+				185FE26C2D69AC8F00EE3DF1 /* SwiftMessages */,
 			);
 			productName = CoinRanking;
 			productReference = 1806E6BF2D677024006B3CA6 /* CoinRanking.app */;
@@ -224,6 +227,7 @@
 				1806E70B2D677A22006B3CA6 /* XCRemoteSwiftPackageReference "SnapKit" */,
 				185FE24F2D68F9F600EE3DF1 /* XCRemoteSwiftPackageReference "SDWebImage" */,
 				185FE2642D69933000EE3DF1 /* XCRemoteSwiftPackageReference "SDWebImageSVGCoder" */,
+				185FE26B2D69AC8F00EE3DF1 /* XCRemoteSwiftPackageReference "SwiftMessages" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 1806E6C02D677024006B3CA6 /* Products */;
@@ -871,6 +875,14 @@
 				minimumVersion = 1.8.0;
 			};
 		};
+		185FE26B2D69AC8F00EE3DF1 /* XCRemoteSwiftPackageReference "SwiftMessages" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SwiftKickMobile/SwiftMessages.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 10.0.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -888,6 +900,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 185FE2642D69933000EE3DF1 /* XCRemoteSwiftPackageReference "SDWebImageSVGCoder" */;
 			productName = SDWebImageSVGCoder;
+		};
+		185FE26C2D69AC8F00EE3DF1 /* SwiftMessages */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 185FE26B2D69AC8F00EE3DF1 /* XCRemoteSwiftPackageReference "SwiftMessages" */;
+			productName = SwiftMessages;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

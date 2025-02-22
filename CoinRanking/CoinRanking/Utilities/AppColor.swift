@@ -49,5 +49,8 @@ enum AppColor {
         return .white
     }
     
-    
+    static var favoritedCellBackgroundColor: UIColor {
+        return primaryColor.withAlphaComponent(0.15)
+    }
+
 }

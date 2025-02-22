@@ -131,12 +131,13 @@ class RankListItemTableViewCell: BaseTableViewCell {
         coinNameLabel.text = vm.name
         coinPriceLabel.text = vm.price
         coinChangeLabel.text = vm.change
-        coinChangeLabel.textColor = vm.priceChangeTextColor
+        coinChangeLabel.textColor = vm.isChangePositive ? AppColor.positiveGainColor : AppColor.negativeGainColor
         if let url = vm.iconUrl {
             coinImageView.sd_setImage(with: url,
                                       placeholderImage: nil,
                                       options: [],
                                       context: [.imageThumbnailPixelSize: imageSize])
         }
+        containerView.backgroundColor = vm.isFavorite ? AppColor.favoritedCellBackgroundColor : AppColor.tableViewCellBackgroundColor
     }
 }

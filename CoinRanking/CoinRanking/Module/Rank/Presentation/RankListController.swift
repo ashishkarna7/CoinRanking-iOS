@@ -18,28 +18,23 @@ class RankListController: BaseListController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.title = "Exchange Listing"
-
+        setupFilterSegmentControl()
         // Register header view
         screenView.tableView.register(RankListHeaderView.self, forHeaderFooterViewReuseIdentifier: RankListHeaderView.identifier)
         screenView.tableView.registerClass(RankListItemTableViewCell.self)
         viewModel.getItemList(type: .initial)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        // Ensure large title is displayed when first shown
-            navigationController?.navigationBar.prefersLargeTitles = true
-            navigationItem.largeTitleDisplayMode = .always
-            
-            // Set Navigation Bar Color
-            navigationController?.navigationBar.barTintColor = AppColor.primaryColor  // Primary Color
-            
-            // Set Title Color
-            navigationController?.navigationBar.titleTextAttributes = [
-                .foregroundColor: AppColor.navTitleColor
-            ]
+    private func setupFilterSegmentControl() {
+        let filterSegmentedControl = UISegmentedControl(items: ["All", "Highest Price", "Best 24h"])
+        filterSegmentedControl.selectedSegmentIndex = 0
+        filterSegmentedControl.addTarget(self, action: #selector(filterChanged(_:)), for: .valueChanged)
+
+        navigationItem.titleView = filterSegmentedControl
     }
-    
+
+    @objc private func filterChanged(_ sender: UISegmentedControl) {}
+
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: RankListHeaderView.identifier) as? RankListHeaderView else { return nil }
         return view
@@ -50,5 +45,26 @@ class RankListController: BaseListController {
         let cell = tableView.dequeueReusableCell(withClassIdentifier: RankListItemTableViewCell.self)
         cell.config(vm: item)
         return cell
+    }
+    
+    // MARK: - Swipe to Favorite
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        
+        let favoriteAction = UIContextualAction(style: .normal, title: "Favorite") { [weak self] _, _, completion in
+            guard let self = self else { return }
+            guard let item = viewModel.getItem(from: indexPath) as? RankListItemViewModel else {return}
+            // Toggle favorite status
+            item.toggleFavorite()
+            
+            // Reload row with animation
+            tableView.reloadRows(at: [indexPath], with: .automatic)
+            
+            completion(true)
+        }
+        
+        favoriteAction.backgroundColor = .systemBlue
+        favoriteAction.image = UIImage(systemName: "star.fill")
+        
+        return UISwipeActionsConfiguration(actions: [favoriteAction])
     }
 }
