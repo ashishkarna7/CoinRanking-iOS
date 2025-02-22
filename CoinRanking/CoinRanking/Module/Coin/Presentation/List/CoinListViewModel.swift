@@ -37,9 +37,9 @@ class CoinListViewModel: BaseListViewModel {
     
     override func getItemList(type: ContentLoadingType) {
         
-        if currentPageOffset > 1 {
-            return
-        }
+//        if currentPageOffset > 1 {
+//            return
+//        }
         if filterType == .favorite {
             didContentFetched.send(true)
             return

@@ -34,8 +34,8 @@ class CoinRankManager: CoinRankManagerProtocol {
     private var fetchStatus: [FilterType: Bool] = [:]
     private var lastPageStatus: [FilterType: Bool] = [:]
     
-    private var itemsPerPage: Int = 1
-    private var maxLimit: Int = 10
+    private var itemsPerPage: Int = 20
+    private var maxLimit: Int = 100
     
     var isLastPageTriggered = PassthroughSubject<Bool, Never>()
     var isEmptyContent = PassthroughSubject<Bool, Never>()
@@ -61,7 +61,6 @@ class CoinRankManager: CoinRankManagerProtocol {
                 
                 // Get already fetched items and their UUIDs
                 let previouslyFetchedItems = self.coinListDataSource.flatMap({ $0.value })
-                let existingUUIDs = Set(previouslyFetchedItems.map { $0.uuid })
 
                 // Preserve favorite status for existing items
                 for item in itemViewModels {
@@ -74,8 +73,7 @@ class CoinRankManager: CoinRankManagerProtocol {
                 if page == 0 {
                     self.coinListDataSource[filterType] = itemViewModels
                 } else {
-                    let newItems = itemViewModels.filter { !existingUUIDs.contains($0.uuid) }
-                    self.coinListDataSource[filterType]?.append(contentsOf: newItems)
+                    self.coinListDataSource[filterType]?.append(contentsOf: itemViewModels)
                 }
                 
                 let totalItems = self.coinListDataSource[filterType] ?? []
@@ -115,7 +113,7 @@ class CoinRankManager: CoinRankManagerProtocol {
     }
     
     func addFavorite(uuid: String) {
-        let items = coinListDataSource.flatMap({$0.value}).filter({$0.uuid == uuid})
+        let items = coinListDataSource.filter({$0.key != .favorite}).flatMap({$0.value}).filter({$0.uuid == uuid})
         if !items.isEmpty {
             items.forEach({$0.addFavorite()})
         }
@@ -124,7 +122,7 @@ class CoinRankManager: CoinRankManagerProtocol {
     }
     
     func removeFavorite(uuid: String) {
-        let items = coinListDataSource.flatMap({$0.value}).filter({$0.uuid == uuid})
+        let items = coinListDataSource.filter({$0.key != .favorite}).flatMap({$0.value}).filter({$0.uuid == uuid})
         if !items.isEmpty {
             items.forEach({$0.removeFavorite()})
         }
