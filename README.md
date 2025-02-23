@@ -3,8 +3,8 @@
 CoinRanking iOS application
 
 ## Prerequisites
-- Xcode 14.0 or later
-- iOS 16.0 or later
+- Xcode 15.0 or later
+- iOS 16.6 or later
 - Swift Package Manager (SPM) for dependency management
 
 ## Installation Steps
@@ -28,11 +28,15 @@ CoinRanking iOS application
    - Press `Cmd + R` or click the Play button to build and run the application
 
 ## Configuration
-- The app uses the CoinRanking API for fetching cryptocurrency data.
+- The app fetches cryptocurrency data using the CoinRanking API.
 - Environment variables are managed through `.xcconfig` files:
-  - `Dev.xconfig` for the development environment
-  - `Prod.xconfig` for the production environment
-- Select the appropriate scheme based on your environment before building.
+  - `Dev.xconfig` for the development environment (`CoinRanking-Dev.xscheme`)
+  - `Prod.xconfig` for the production environment (`CoinRanking.xscheme`)
+- Select the appropriate scheme based on your environment before building the project.
+- For testing, use the `CoinRankingTests.xscheme`.
+
+## For Documentation
+- For code documentation, you can view it by building the documentation in Xcode.
 
 ## Troubleshooting
 If you encounter build issues:
