@@ -10,7 +10,7 @@ import Combine
 
 // MARK: - Network Service
 
-final class NetworkManager: NetworkMangerProtocol {
+final class NetworkManager: NetworkManagerProtocol {
 
     private let session: URLSession
 
@@ -18,36 +18,36 @@ final class NetworkManager: NetworkMangerProtocol {
         self.session = session
     }
 
-    func request<T: Decodable>(_ target: TargetType) -> AnyPublisher<T, NetworkError> {
+    func request<T: Decodable>(_ api: CoinRankingAPI) -> AnyPublisher<T, NetworkError> {
 
-        guard let url = URL(string: target.baseURL + target.path) else {
+        guard let url = URL(string: api.baseURL + api.path) else {
             return Fail<T, NetworkError>(error: NetworkError.invalidURL).eraseToAnyPublisher()
         }
 
         var request = URLRequest(url: url)
-        request.httpMethod = target.method.rawValue
-        request.allHTTPHeaderFields = target.headers
+        request.httpMethod = api.method.rawValue
+        request.allHTTPHeaderFields = api.headers
 
-        if let parameters = target.parameters {
-            if let encodedData = target.parameterEncoding.encode(parameters) {
-                switch target.method {
+        if let parameters = api.parameters {
+            if let encodedData = api.parameterEncoding.encode(parameters) {
+                switch api.method {
                 case .get:
-                    if target.parameterEncoding == .queryString {
+                    if api.parameterEncoding == .queryString {
                         var components = URLComponents(url: url, resolvingAgainstBaseURL: false)
                         components?.percentEncodedQuery = String(data: encodedData, encoding: .utf8)
                         request.url = components?.url
                     }
                 default:
                     request.httpBody = encodedData
-                    if target.parameterEncoding == .jsonBody {
+                    if api.parameterEncoding == .jsonBody {
                         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
                     }
                 }
             }
         }
 
-        target.modifyRequest(&request) // Allow customization before auth
-        request = target.authentication.apply(to: request)
+        api.modifyRequest(&request) // Allow customization before auth
+        request = api.authentication.apply(to: request)
 
         #if DEBUG
            NetworkLogger.logRequest(request)

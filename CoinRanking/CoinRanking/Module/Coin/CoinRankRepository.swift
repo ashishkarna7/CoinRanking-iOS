@@ -11,11 +11,11 @@ import Combine
 class CoinRankRepository: CoinRankRepositoryProtocol {
     
     private var cancellables: Set<AnyCancellable>
-    private var networkService: NetworkMangerProtocol
+    private var networkManager: NetworkManagerProtocol
     
-    init() {
+    init(networkManager: NetworkManagerProtocol) {
         self.cancellables = Set<AnyCancellable>()
-        self.networkService = NetworkManager()
+        self.networkManager = networkManager
     }
     
     func fetchCoinList(page: Int, limit: Int, filterType: CoinFilterType) -> AnyPublisher<CoinResponse, NetworkError> {
@@ -31,7 +31,7 @@ class CoinRankRepository: CoinRankRepositoryProtocol {
             break
         }
         let param = CoinListParameters(limit: limit, offset: page, orderBy: orderBy)
-        return self.networkService.request(CoinRankingAPI.getCoinList(param))
+        return self.networkManager.request(.getCoinList(param))
     }
     
     func fetchCoinDetail(uuid:String, period: ChartPeriodType) -> AnyPublisher<CoinDetailResponse, NetworkError> {
@@ -47,7 +47,7 @@ class CoinRankRepository: CoinRankRepositoryProtocol {
             timePeriod = "1y"
         }
         let param = CoinDetailParameter(timePeriod: timePeriod)
-        return self.networkService.request(CoinRankingAPI.getCoinDetail(uuid, param))
+        return self.networkManager.request(.getCoinDetail(uuid, param))
     }
 }
 
