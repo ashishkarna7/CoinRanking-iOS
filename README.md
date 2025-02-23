@@ -35,8 +35,12 @@ CoinRanking iOS application
 - Select the appropriate scheme based on your environment before building the project.
 - For testing, use the `CoinRankingTests.xscheme`.
 
-## For Documentation
-- For code documentation, you can view it by building the documentation in Xcode.
+## Documentation  
+- To view the code documentation in Xcode, follow these steps:  
+  - Open the project in **Xcode**.  
+  - Navigate to **Product** > **Build Documentation** (or press `Shift + Command + Option + D`).  
+  - After the build completes, open **Xcode's Documentation Browser** by going to **Window** > **Developer Documentation**.  
+
 
 ## Troubleshooting
 If you encounter build issues:
