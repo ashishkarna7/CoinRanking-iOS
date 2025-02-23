@@ -208,7 +208,7 @@ class CoinManager: CoinManagerProtocol {
     ///   - filterType: The filter type being updated
     private func updateDataSource(with newItems: [CoinListItemViewModel], page: Int, filterType: CoinFilterType) {
         let existingItems = coinListDataSource.flatMap { $0.value }
-        
+
         // Preserve favorite status
         for item in newItems {
             if let existing = existingItems.first(where: { $0.uuid == item.uuid }) {
@@ -219,7 +219,13 @@ class CoinManager: CoinManagerProtocol {
         if page == 0 {
             coinListDataSource[filterType] = newItems
         } else {
-            coinListDataSource[filterType]?.append(contentsOf: newItems)
+            // Create a set of existing UUIDs to quickly check for duplicates
+            let existingUUIDs = Set(existingItems.map { $0.uuid })
+            
+            // Filter out new items that already exist in the data source
+            let uniqueItems = newItems.filter { !existingUUIDs.contains($0.uuid) }
+            
+            coinListDataSource[filterType]?.append(contentsOf: uniqueItems)
         }
     }
     
