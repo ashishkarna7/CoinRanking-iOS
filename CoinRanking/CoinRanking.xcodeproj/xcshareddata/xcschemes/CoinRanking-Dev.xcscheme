@@ -16,7 +16,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "1806E6BE2D677024006B3CA6"
-               BuildableName = "CoinRanking.app"
+               BuildableName = ".app"
                BlueprintName = "CoinRanking"
                ReferencedContainer = "container:CoinRanking.xcodeproj">
             </BuildableReference>
@@ -45,7 +45,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1806E6BE2D677024006B3CA6"
-            BuildableName = "CoinRanking.app"
+            BuildableName = ".app"
             BlueprintName = "CoinRanking"
             ReferencedContainer = "container:CoinRanking.xcodeproj">
          </BuildableReference>
@@ -62,7 +62,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1806E6BE2D677024006B3CA6"
-            BuildableName = "CoinRanking.app"
+            BuildableName = ".app"
             BlueprintName = "CoinRanking"
             ReferencedContainer = "container:CoinRanking.xcodeproj">
          </BuildableReference>

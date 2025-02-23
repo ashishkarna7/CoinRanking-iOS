@@ -34,8 +34,6 @@
 		1806E6BF2D677024006B3CA6 /* CoinRanking.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CoinRanking.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1806E6D52D677025006B3CA6 /* CoinRankingTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CoinRankingTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1806E6DF2D677025006B3CA6 /* CoinRankingUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CoinRankingUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		18FFDA292D6B38F7000090B0 /* Dev.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Dev.xcconfig; path = "/Users/apple/Practice/CoinRanking-iOS/CoinRanking/CoinRanking/Resources/Environment/Dev.xcconfig"; sourceTree = "<absolute>"; };
-		18FFDA2A2D6B38F7000090B0 /* Prod.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Prod.xcconfig; path = "/Users/apple/Practice/CoinRanking-iOS/CoinRanking/CoinRanking/Resources/Environment/Prod.xcconfig"; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -127,6 +125,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		18018A572D6B3B980062B772 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
 		1806E6B62D677024006B3CA6 = {
 			isa = PBXGroup;
 			children = (
@@ -134,6 +139,7 @@
 				1806E6D82D677025006B3CA6 /* CoinRankingTests */,
 				1806E6E22D677025006B3CA6 /* CoinRankingUITests */,
 				1806E6C02D677024006B3CA6 /* Products */,
+				18018A572D6B3B980062B772 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -388,7 +394,8 @@
 		};
 		1806E6EB2D677025006B3CA6 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 18FFDA2A2D6B38F7000090B0 /* Prod.xcconfig */;
+			baseConfigurationReferenceAnchor = 1806E6C12D677024006B3CA6 /* CoinRanking */;
+			baseConfigurationReferenceRelativePath = Resources/Configuration/Prod.xcconfig;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -453,7 +460,8 @@
 		};
 		1806E6EC2D677025006B3CA6 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 18FFDA2A2D6B38F7000090B0 /* Prod.xcconfig */;
+			baseConfigurationReferenceAnchor = 1806E6C12D677024006B3CA6 /* CoinRanking */;
+			baseConfigurationReferenceRelativePath = Resources/Configuration/Prod.xcconfig;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -581,7 +589,8 @@
 		};
 		18E5859F2D68D820002FFE8F /* Dev_Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 18FFDA292D6B38F7000090B0 /* Dev.xcconfig */;
+			baseConfigurationReferenceAnchor = 1806E6C12D677024006B3CA6 /* CoinRanking */;
+			baseConfigurationReferenceRelativePath = Resources/Configuration/Dev.xcconfig;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -707,7 +716,8 @@
 		};
 		18E585A32D68D829002FFE8F /* Dev_Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 18FFDA292D6B38F7000090B0 /* Dev.xcconfig */;
+			baseConfigurationReferenceAnchor = 1806E6C12D677024006B3CA6 /* CoinRanking */;
+			baseConfigurationReferenceRelativePath = Resources/Configuration/Dev.xcconfig;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
