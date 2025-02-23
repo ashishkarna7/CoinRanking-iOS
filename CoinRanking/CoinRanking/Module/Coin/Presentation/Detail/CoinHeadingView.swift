@@ -91,9 +91,16 @@ class CoinHeadingView: BaseView {
         return stackView
     }()
     
+    private lazy var coinChangeWrapperView: UIView = {
+        let view = UIView()
+        view.addSubview(coinChangeStackView)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     private lazy var priceStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [coinPriceStackView,
-                                                       coinChangeStackView])
+                                                       coinChangeWrapperView])
         stackView.axis = .vertical
         stackView.spacing = 4
         stackView.isLayoutMarginsRelativeArrangement = true
@@ -160,6 +167,11 @@ class CoinHeadingView: BaseView {
         priceStackView.snp.makeConstraints({ make in
             make.left.right.equalToSuperview()
             make.centerY.equalToSuperview()
+        })
+        
+        coinChangeStackView.snp.makeConstraints({ make in
+            make.right.top.bottom.equalToSuperview()
+            make.left.greaterThanOrEqualToSuperview()
         })
     }
     
