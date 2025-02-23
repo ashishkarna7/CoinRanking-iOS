@@ -9,16 +9,16 @@ import Foundation
 
 enum CoinFilterType: Int {
     case all = 0
-    case price = 1
-    case volume = 2
+    case highestprice = 1
+    case performance24h = 2
     case favorite = 3
 
     var value: String {
         switch self {
-        case .all: return "All"
-        case .price: return "Highest Price"
-        case .volume: return "Best 24h"
-        default: return "Favorite"
+        case .all: return LocalizedKeys.all.value
+        case .highestprice: return LocalizedKeys.highestPrice.value
+        case .performance24h: return LocalizedKeys.performance24h.value
+        default: return LocalizedKeys.favorite.value
         }
     }
 }

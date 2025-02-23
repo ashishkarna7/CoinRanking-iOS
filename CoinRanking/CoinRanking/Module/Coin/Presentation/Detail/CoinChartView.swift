@@ -14,8 +14,8 @@ struct CoinChartView: View {
     var body: some View {
         Chart(data) { point in
             LineMark(
-                x: .value("Date", point.date),
-                y: .value("Price", point.price)
+                x: .value(LocalizedKeys.date.value, point.date),
+                y: .value(LocalizedKeys.price.value, point.price)
             )
             .foregroundStyle(.blue)
         }

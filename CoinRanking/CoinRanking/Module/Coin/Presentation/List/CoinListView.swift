@@ -11,8 +11,8 @@ class CoinListView: BaseListView {
     
     lazy var segmentedControl: UISegmentedControl = {
         let segmentedControl = UISegmentedControl(items: [CoinFilterType.all.value,
-                                                          CoinFilterType.price.value,
-                                                          CoinFilterType.volume.value])
+                                                          CoinFilterType.highestprice.value,
+                                                          CoinFilterType.performance24h.value])
         segmentedControl.selectedSegmentIndex = 0
         segmentedControl.translatesAutoresizingMaskIntoConstraints = false
         return segmentedControl

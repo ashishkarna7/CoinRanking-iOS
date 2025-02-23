@@ -23,9 +23,9 @@ class CoinRankRepository: CoinRankRepositoryProtocol {
         switch filterType {
         case .all:
             orderBy = "marketCap"
-        case .price:
+        case .highestprice:
             orderBy = "price"
-        case .volume:
+        case .performance24h:
             orderBy = "24hVolume"
         default:
             break
