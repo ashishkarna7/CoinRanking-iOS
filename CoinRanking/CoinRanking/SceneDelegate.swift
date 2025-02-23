@@ -18,11 +18,23 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
+        // Create main window for the app using the window scene
         let window = UIWindow(windowScene: windowScene)
+        
+        // Initialize repository with network manager for API calls
         let repository = CoinRankRepository(networkManager: NetworkManager())
+        
+        // Create manager to handle business logic using repository
         let manager = CoinRankManager(repository: repository)
+        
+        // Initialize root view controller with view and view model
+        // Using .all type to show all coins in the list
         let rootViewController = CoinListController(view: CoinListView(), viewModel: CoinListViewModel(manager: manager, type: .all))
+        
+        // Embed root view controller in navigation controller and set as window's root
         window.rootViewController = UINavigationController(rootViewController: rootViewController)
+        
+        // Assign window to scene delegate and make it key window
         self.window = window
         window.makeKeyAndVisible()
         
