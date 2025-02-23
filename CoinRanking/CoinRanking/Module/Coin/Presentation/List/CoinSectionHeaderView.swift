@@ -17,22 +17,8 @@ class CoinSectionHeaderView: UITableViewHeaderFooterView {
         return label
     }()
     
-    lazy var lineSeparatorLeftView: UIView = {
-        let view = UIView()
-        view.backgroundColor = AppColor.tableViewSectionSeparatorColor
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-    
-    lazy var lineSeparatorRightView: UIView = {
-        let view = UIView()
-        view.backgroundColor = AppColor.tableViewSectionSeparatorColor
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-    
     lazy var exchangeStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [exchangeLabel, lineSeparatorLeftView])
+        let stackView = UIStackView(arrangedSubviews: [exchangeLabel])
         stackView.axis = .horizontal
         stackView.spacing = 8
         stackView.isLayoutMarginsRelativeArrangement = true
@@ -59,7 +45,6 @@ class CoinSectionHeaderView: UITableViewHeaderFooterView {
     
     lazy var priceStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [priceLabel,
-                                                       lineSeparatorRightView,
                                                        changeLabel])
         stackView.axis = .horizontal
         stackView.spacing = 8
@@ -77,9 +62,9 @@ class CoinSectionHeaderView: UITableViewHeaderFooterView {
         stackView.spacing = 8
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 8,
-                                                                     leading: 8,
+                                                                     leading: 16,
                                                                      bottom: 8,
-                                                                     trailing: 8)
+                                                                     trailing: 16)
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
@@ -108,14 +93,6 @@ class CoinSectionHeaderView: UITableViewHeaderFooterView {
         
         containerStackView.snp.makeConstraints({ make in
             make.edges.equalToSuperview()
-        })
-        
-        lineSeparatorLeftView.snp.makeConstraints({ make in
-            make.width.equalTo(1)
-        })
-        
-        lineSeparatorRightView.snp.makeConstraints({ make in
-            make.width.equalTo(1)
         })
         
         priceLabel.text = LocalizedKeys.price.value
