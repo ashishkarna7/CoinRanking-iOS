@@ -7,8 +7,14 @@
 
 import UIKit
 
+/// Utility class for configuring global navigation bar appearance
 final class NavigationBarConfigurator {
     
+    /// Applies the global navigation bar style for the app
+    /// - Sets opaque background with primary color
+    /// - Configures title text color
+    /// - Enables large titles
+    /// - Applies standard and compact appearances
     static func applyGlobalStyle() {
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground()
@@ -25,4 +31,3 @@ final class NavigationBarConfigurator {
         navBar.prefersLargeTitles = true
     }
 }
-

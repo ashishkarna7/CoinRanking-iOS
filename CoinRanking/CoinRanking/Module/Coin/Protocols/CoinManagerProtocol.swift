@@ -9,7 +9,7 @@ import Combine
 import Foundation
 
 /// Protocol defining the interface for managing cryptocurrency data and operations
-protocol CoinRankManagerProtocol {
+protocol CoinManagerProtocol {
     /// Fetches a paginated list of coins based on filter type
     /// - Parameters:
     ///   - page: The page number to fetch

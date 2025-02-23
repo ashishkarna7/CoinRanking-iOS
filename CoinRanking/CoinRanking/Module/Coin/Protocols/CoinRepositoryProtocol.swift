@@ -8,7 +8,7 @@
 import Combine
 
 /// Protocol defining the interface for fetching cryptocurrency data from a repository
-protocol CoinRankRepositoryProtocol {
+protocol CoinRepositoryProtocol {
     /// Fetches a paginated list of coins based on filter criteria
     /// - Parameters:
     ///   - page: The page number to fetch

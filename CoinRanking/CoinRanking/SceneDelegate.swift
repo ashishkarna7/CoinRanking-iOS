@@ -22,10 +22,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let window = UIWindow(windowScene: windowScene)
         
         // Initialize repository with network manager for API calls
-        let repository = CoinRankRepository(networkManager: NetworkManager())
+        let repository = CoinRepository(networkManager: NetworkManager())
         
         // Create manager to handle business logic using repository
-        let manager = CoinRankManager(repository: repository)
+        let manager = CoinManager(repository: repository)
         
         // Initialize root view controller with view and view model
         // Using .all type to show all coins in the list

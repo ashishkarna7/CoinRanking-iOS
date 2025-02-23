@@ -9,23 +9,32 @@ import XCTest
 import Combine
 @testable import CoinRanking  // Replace with your actual module name
 
-class CoinRankRepositoryTests: XCTestCase {
+/// A test class for validating the functionality of the CoinRepository.
+/// This class tests both successful and failure scenarios for fetching coin lists and coin details.
+class CoinRepositoryTests: XCTestCase {
     
+    /// Mock network manager used for simulating network requests
     var mockNetworkManager: MockNetworkManager!
+    
+    /// Set of cancellables to store and manage publishers
     var cancellables: Set<AnyCancellable>!
     
+    /// Set up method called before each test
     override func setUp() {
         super.setUp()
         mockNetworkManager = MockNetworkManager()
         cancellables = Set<AnyCancellable>()
     }
     
+    /// Tear down method called after each test
     override func tearDown() {
         mockNetworkManager = nil
         cancellables = nil
         super.tearDown()
     }
     
+    /// Tests successful fetching of coin list
+    /// This test validates that the coin list API returns expected data when successful
     func testFetchCoinList_Success() {
         // Given
         let rawJSON = """
@@ -77,8 +86,8 @@ class CoinRankRepositoryTests: XCTestCase {
         wait(for: [expectation], timeout: 5.0)
     }
 
-
-
+    /// Tests failure scenario when fetching coin list
+    /// This test validates that appropriate error is returned when network request fails
     func testFetchCoinList_Failure() {
         // Given
         mockNetworkManager.mockData = nil  // No data to force failure
@@ -104,7 +113,8 @@ class CoinRankRepositoryTests: XCTestCase {
         wait(for: [expectation], timeout: 5.0)
     }
 
-    
+    /// Tests successful fetching of coin detail
+    /// This test validates that the coin detail API returns expected data when successful
     func testFetchCoinDetail_Success() {
         // Given
         let rawJSON = """
@@ -154,6 +164,8 @@ class CoinRankRepositoryTests: XCTestCase {
         wait(for: [expectation], timeout: 5.0)
     }
     
+    /// Tests failure scenario when fetching coin detail
+    /// This test validates that appropriate error is returned when network request fails
     func testFetchCoinDetail_Failure() {
         // Given
         mockNetworkManager.mockData = nil  // No data to force failure

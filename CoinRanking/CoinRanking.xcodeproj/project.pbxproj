@@ -47,11 +47,10 @@
 		18A581262D6AE2A1006E28C7 /* Exceptions for "CoinRanking" folder in "CoinRankingTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Module/Coin/CoinRankRepository.swift,
 				Module/Coin/Model/ChartPeriodType.swift,
 				Module/Coin/Model/CoinFilterType.swift,
 				Module/Coin/Model/CoinResponse.swift,
-				Module/Coin/Protocols/CoinRankRepositoryProtocol.swift,
+				Module/Coin/Protocols/CoinRepositoryProtocol.swift,
 				Networking/CoinRankingAPI.swift,
 				Networking/NetworkError.swift,
 				Networking/NetworkManagerProtocol.swift,

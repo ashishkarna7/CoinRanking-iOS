@@ -34,7 +34,7 @@ struct Coin: Decodable {
     /// URL to the coin's icon/logo
     let iconUrl: String
     /// Brand color associated with the coin
-    let color: String
+    let color: String?
     /// Historical price data points for sparkline chart
     let sparkline: [String?]
     /// All-time high price information
