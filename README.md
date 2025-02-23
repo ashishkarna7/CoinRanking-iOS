@@ -102,7 +102,6 @@ If you encounter build issues:
 2. **Network Layer:**
    - Assumed unstable network conditions, implemented robust error handling
    - Used URLSession for networking as third-party libraries weren't required
-   - Implemented retry logic for transient failures
 
 3. **UI/UX Decisions:**
    - Prioritized real-time data updates over battery optimization
@@ -114,12 +113,10 @@ If you encounter build issues:
    - Used mock data that represents real-world scenarios
    - Implemented protocol-based mocking for better test isolation
 
-5. **Architecture Choices:**
-   - Chose MVVM + Combine over UIKit and SwiftUI (especially for the chart view)
-   - Used protocols extensively to enable future modifications
-   - Separated concerns to allow independent module testing
+5. Architecture Choices  
+   - Adopted **MVVM + Combine**, with **UIKit** as the primary framework and **limited use of SwiftUI** (especially for the chart view).  
+   - Leveraged **protocols** extensively to facilitate future modifications.  
+   - Ensured **separation of concerns** for independent module testing.  
 
-6. **Limitations:**
-   - No offline mode implementation
-   - Basic error retry mechanism
-   - Limited historical data caching
+6. Limitations  
+   - Offline mode is not implemented.
