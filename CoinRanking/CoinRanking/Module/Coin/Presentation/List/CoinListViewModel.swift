@@ -95,8 +95,8 @@ class CoinListViewModel: BaseListViewModel {
         if self.currrentSelectedTag != self.previousSelectedTag {
             switch tag {
             case CoinFilterType.all.rawValue: filterType = .all
-            case CoinFilterType.price.rawValue: filterType = .price
-            case CoinFilterType.volume.rawValue: filterType = .volume
+            case CoinFilterType.highestprice.rawValue: filterType = .highestprice
+            case CoinFilterType.performance24h.rawValue: filterType = .performance24h
             default: filterType = .favorite
             }
             

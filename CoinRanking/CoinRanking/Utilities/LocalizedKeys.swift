@@ -29,4 +29,22 @@ enum LocalizedKeys: String, Localizable {
     
     case noResultFound = "no_result_found"
     case networkError = "network_error"
+    case day
+    case week
+    case month
+    case year
+    case all
+    case highestPrice = "highest_price"
+    case performance24h = "performance_24h"
+    case price
+    case coin
+    case change
+    case favorite
+    case coinList = "coin_list"
+    case priceChart = "price_chart"
+    case statistics
+    case date
+    case marketCap = "market_cap"
+    case priceAt = "price_at"
+    case allTimeHigh = "all_time_high"
 }

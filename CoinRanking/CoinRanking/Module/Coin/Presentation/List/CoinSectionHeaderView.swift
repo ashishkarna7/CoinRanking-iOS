@@ -118,9 +118,9 @@ class CoinSectionHeaderView: UITableViewHeaderFooterView {
             make.width.equalTo(1)
         })
         
-        priceLabel.text = "Price"
-        exchangeLabel.text = "Coin"
-        changeLabel.text = "Change"
+        priceLabel.text = LocalizedKeys.price.value
+        exchangeLabel.text = LocalizedKeys.coin.value
+        changeLabel.text = LocalizedKeys.change.value
     }
 
 }

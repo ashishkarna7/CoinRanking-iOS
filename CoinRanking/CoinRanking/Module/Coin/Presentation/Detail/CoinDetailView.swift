@@ -104,8 +104,8 @@ class CoinDetailView: BaseView {
         self.backgroundColor = AppColor.tableViewBackgroundColor
         addSubview(scrollView)
         generateChildren()
-        chartTitleLabel.text = "Price chart"
-        statisticTitleLabel.text = "Statistics"
+        chartTitleLabel.text = LocalizedKeys.priceChart.value
+        statisticTitleLabel.text = LocalizedKeys.statistics.value
     }
     
     private func generateChildren() {

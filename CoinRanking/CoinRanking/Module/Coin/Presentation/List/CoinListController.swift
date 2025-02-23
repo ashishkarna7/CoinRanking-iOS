@@ -22,9 +22,9 @@ class CoinListController: BaseListController {
     override func viewDidLoad() {
         super.viewDidLoad()
         if viewModel.filterType == .favorite {
-            self.navigationItem.title = "Favorites"
+            self.navigationItem.title = LocalizedKeys.favorite.value
         } else {
-            self.navigationItem.title = "Exchange Listing"
+            self.navigationItem.title = LocalizedKeys.coinList.value
             setupFilterSegmentControl()
             setupFavoriteButton()
         }

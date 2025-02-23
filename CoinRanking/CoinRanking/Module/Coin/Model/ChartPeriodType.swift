@@ -15,10 +15,10 @@ enum ChartPeriodType: Int {
     
     var value: String {
         switch self {
-        case .day: return "1D"
-        case .week: return "1W"
-        case .month: return "1M"
-        default: return "1Y"
+        case .day: "1" + LocalizedKeys.day.value
+        case .week: "1" + LocalizedKeys.week.value
+        case .month: "1" + LocalizedKeys.month.value
+        default: "1" + LocalizedKeys.year.value
         }
     }
 }

@@ -132,8 +132,8 @@ class CoinHeadingView: BaseView {
         addSubview(containerStackView)
         generateChildren()
         
-        coinPriceTitleLabel.text = "Price :"
-        coinChangeTitleLabel.text = "Change :"
+        coinPriceTitleLabel.text = LocalizedKeys.price.value + " : "
+        coinChangeTitleLabel.text = LocalizedKeys.change.value + " : "
     }
     
     private func generateChildren() {

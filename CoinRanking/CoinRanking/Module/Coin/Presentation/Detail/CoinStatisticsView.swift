@@ -45,9 +45,9 @@ class CoinStatisticsView: BaseView {
         addSubview(containerStackView)
         generateChildren()
         
-        marketCapView.titleLabel.text = "Market cap :"
-        priceAtView.titleLabel.text = "Price at :"
-        allTimeHighView.titleLabel.text = "All time high: "
+        marketCapView.titleLabel.text = "\(LocalizedKeys.marketCap.value) :"
+        priceAtView.titleLabel.text = "\(LocalizedKeys.priceAt.value) :"
+        allTimeHighView.titleLabel.text = "\(LocalizedKeys.allTimeHigh.value) "
     }
     
     private func generateChildren() {
