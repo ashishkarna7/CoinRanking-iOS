@@ -9,6 +9,14 @@
 import Foundation
 import UIKit
 
+/// Controller class for displaying a list of cryptocurrencies
+///
+/// This class handles:
+/// - Displaying a list of coins in a table view
+/// - Filtering coins by different criteria (all, highest price, performance)
+/// - Managing favorites functionality
+/// - Navigation to coin detail view
+/// - Swipe actions for favoriting coins
 class CoinListController: BaseListController {
     
     override var screenView: CoinListView {
@@ -38,15 +46,19 @@ class CoinListController: BaseListController {
         viewModel.getItemList(type: .initial)
     }
     
+    /// Sets up the segmented control for filtering coins
     private func setupFilterSegmentControl() {
         screenView.segmentedControl.addTarget(self, action: #selector(filterChanged(_:)), for: .valueChanged)
         navigationItem.titleView = screenView.segmentedControl
     }
 
+    /// Handles filter changes from the segmented control
+    /// - Parameter sender: The segmented control that triggered the change
     @objc private func filterChanged(_ sender: UISegmentedControl) {
         viewModel.applyFilter(tag: sender.selectedSegmentIndex)
     }
     
+    /// Sets up the favorites button in the navigation bar
     private func setupFavoriteButton() {
         let favoriteButton = UIBarButtonItem(
             image: UIImage(systemName: "star.fill"),
@@ -57,9 +69,10 @@ class CoinListController: BaseListController {
         navigationItem.rightBarButtonItem = favoriteButton
     }
 
+    /// Shows the favorites list view controller
     @objc private func showFavorites() {
         let favoriteVC = CoinListController(view: CoinListView(),
-                                            viewModel: CoinListViewModel(manager: viewModel.manager,
+                                            viewModel: CoinListViewModel(manager: viewModel.getManager(),
                                                                          type: .favorite))
         self.navigationController?.pushViewController(favoriteVC, animated: true)
     }
@@ -84,6 +97,11 @@ class CoinListController: BaseListController {
     }
     
     // MARK: - Swipe to Favorite
+    /// Configures swipe actions for favoriting coins
+    /// - Parameters:
+    ///   - tableView: The table view requesting the swipe configuration
+    ///   - indexPath: The index path of the row being configured
+    /// - Returns: A swipe actions configuration object
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
         let favoriteAction = UIContextualAction(style: .normal, title: "Favorite") { [weak self] _, _, completion in
@@ -103,10 +121,12 @@ class CoinListController: BaseListController {
         return UISwipeActionsConfiguration(actions: [favoriteAction])
     }
     
+    /// Navigates to the detail view for a specific coin
+    /// - Parameter uuid: The unique identifier of the coin
     private func navigateToDetail(uuid: String) {
         
         let coinDetailVC = CoinDetailController(view: CoinDetailView(),
-                                                viewModel: CoinDetailViewModel(manager: viewModel.manager,
+                                                viewModel: CoinDetailViewModel(manager: viewModel.getManager(),
                                                                                detail: viewModel.getCoinDetail(uuid: uuid)))
         self.navigationController?.pushViewController(coinDetailVC, animated: true)
     }

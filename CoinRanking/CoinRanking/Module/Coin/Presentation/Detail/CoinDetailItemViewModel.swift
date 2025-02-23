@@ -7,19 +7,37 @@
 
 import Foundation
 
+/// View model class for displaying detailed coin information
+/// Inherits from CoinListItemViewModel and adds additional chart and price data
 class CoinDetailItemViewModel: CoinListItemViewModel {
+    /// Array of price points for generating price chart
     private(set) var chartData: [CoinPricePoint] = []
+    
+    /// Background color for the chart in hex format
     private(set) var chartBackgroundColor: String?
+    
+    /// Formatted market cap value with appropriate suffix (K, M, B, T)
     private(set) var marketCap: String?
+    
+    /// Formatted price at a specific time with coin symbol
     private(set) var priceAt: String?
+    
+    /// Formatted all-time high price with $ symbol
     private(set) var allTimeHigh: String?
     
+    /// Formatted symbol
+    private(set) var symbol: String?
+    
+    /// Initializes view model with coin data and time period
+    /// - Parameters:
+    ///   - coin: The coin model containing raw data
+    ///   - timePeriod: Time period for chart data (day, week, month, year)
     init(coin: Coin, timePeriod: ChartPeriodType) {
         super.init(coin: coin)
         let sparkline = coin.sparkline.compactMap({$0})
         chartData = self.mapSparklineData(sparkline: sparkline, timePeriod: timePeriod)
         self.chartBackgroundColor = coin.color
-        
+        self.symbol = coin.symbol
         if let marketCap = coin.marketCap {
             self.marketCap = formaLargeNumber(marketCap)
         }
@@ -33,10 +51,17 @@ class CoinDetailItemViewModel: CoinListItemViewModel {
         }
     }
     
+    /// Initializes view model from an existing CoinListItemViewModel
+    /// - Parameter vm: The view model to copy
     override init(vm: CoinListItemViewModel) {
         super.init(vm: vm)
     }
     
+    /// Maps sparkline price data to chart data points with dates
+    /// - Parameters:
+    ///   - sparkline: Array of price strings
+    ///   - timePeriod: Time period for chart data
+    /// - Returns: Array of CoinPricePoint objects with dates and prices
     func mapSparklineData(sparkline: [String], timePeriod: ChartPeriodType) -> [CoinPricePoint] {
         var pricePoints: [CoinPricePoint] = []
         let now = Date()
@@ -65,6 +90,9 @@ class CoinDetailItemViewModel: CoinListItemViewModel {
         return pricePoints.reversed() // Ensure oldest data appears first
     }
     
+    /// Formats large numbers with appropriate suffixes (K, M, B, T)
+    /// - Parameter value: Number string to format
+    /// - Returns: Formatted string with appropriate suffix
     func formaLargeNumber(_ value: String) -> String {
         guard let number = Double(value) else { return value }
 
@@ -88,9 +116,14 @@ class CoinDetailItemViewModel: CoinListItemViewModel {
 
 }
 
-
+/// Model representing a single price point with date for charting
 struct CoinPricePoint: Identifiable {
+    /// Unique identifier for the price point
     let id = UUID()
+    
+    /// Date of the price point
     let date: Date
+    
+    /// Price value at the given date
     let price: Double
 }

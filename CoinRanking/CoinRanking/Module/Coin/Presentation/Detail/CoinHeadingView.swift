@@ -16,6 +16,15 @@ class CoinHeadingView: BaseView {
         return imageView
     }()
     
+    private  lazy var symbolTitleLabel: UILabel = {
+        let label = UILabel()
+        label.font = AppFont.heading
+        label.textColor = AppColor.textSecondaryColor
+        label.textAlignment = .left
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     private  lazy var coinWrapperView: UIView = {
         let view = UIView()
         view.addSubview(coinImageView)
@@ -102,8 +111,9 @@ class CoinHeadingView: BaseView {
     
     private lazy var exchangeStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [coinWrapperView,
-                                                       priceStackWrapperView])
+                                                       symbolTitleLabel])
         stackView.axis = .horizontal
+        stackView.distribution = .fillEqually
         stackView.spacing = 8
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.directionalLayoutMargins = .zero
@@ -112,7 +122,7 @@ class CoinHeadingView: BaseView {
     }()
     
     private lazy var containerStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [exchangeStackView])
+        let stackView = UIStackView(arrangedSubviews: [exchangeStackView, priceStackWrapperView])
         stackView.axis = .horizontal
         stackView.spacing = 8
         stackView.distribution = .fillEqually
@@ -157,6 +167,10 @@ class CoinHeadingView: BaseView {
         coinPriceLabel.text = vm.price
         coinChangeLabel.text = vm.change
         coinChangeLabel.textColor = vm.isChangePositive ? AppColor.positiveGainColor : AppColor.negativeGainColor
+        if let symbol = vm.symbol {
+            symbolTitleLabel.text = symbol
+        }
+
         if let url = vm.iconUrl {
             coinImageView.sd_setImage(with: url,
                                       placeholderImage: nil,
