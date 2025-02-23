@@ -1,0 +1,15 @@
+//
+//  prod.xcconfig
+//  CoinRanking
+//
+//  Created by Ashish Karna on 21/02/2025.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+// Production Configuration
+PRODUCT_NAME = CoinRanking
+PRODUCT_BUNDLE_IDENTIFIER = com.ashishkarna.coinranking
+API_KEY = coinrankingd7633692ad19b7a34b748480c63bd9231ada4cbfd9d88687
+
