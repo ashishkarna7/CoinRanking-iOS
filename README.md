@@ -2,6 +2,29 @@
 
 CoinRanking iOS application
 
+A modern iOS application built with UIKit and SwiftUI, featuring real-time cryptocurrency data, featuring price charts, filtering, and favorites management. This project leverage clean architecture with MVVM principles and adhering to SOLID design patterns for maintainability and scalability.
+
+### Key Features
+- Real-time cryptocurrency data fetching
+- Filtering and sorting capabilities
+- Favorite coin management
+- Price chart visualization
+- Error handling and offline state management
+
+### Demo
+### Fetch data with pagination
+<img src="https://github.com/ashishkarna7/CoinRanking-iOS/blob/main/CoinRanking/CoinRanking/Resources/fetch.gif" alt="Fetch" width="300" />
+
+### Filter
+<img src="https://github.com/ashishkarna7/CoinRanking-iOS/blob/main/CoinRanking/CoinRanking/Resources/filter.gif" alt="Filter" width="300" />
+
+### Favorite with state management
+<img src="https://github.com/ashishkarna7/CoinRanking-iOS/blob/main/CoinRanking/CoinRanking/Resources/favorite.gif" alt="Favorite" width="300" />
+
+### Price charts
+<img src="https://github.com/ashishkarna7/CoinRanking-iOS/blob/main/CoinRanking/CoinRanking/Resources/chart.gif" alt="Chart" width="300" />
+
+
 ## Prerequisites
 - Xcode 15.0 or later
 - iOS 16.6 or later
@@ -57,13 +80,6 @@ If you encounter build issues:
 - Protocol-oriented design for better testability
 - Comprehensive unit test coverage
 - UI optimized for both iPhone and iPad
-
-### Key Features
-- Real-time cryptocurrency data fetching
-- Filtering and sorting capabilities
-- Favorite coin management
-- Price chart visualization
-- Error handling and offline state management
 
 ### Technical Challenges & Solutions
 
